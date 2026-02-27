@@ -24,7 +24,6 @@ padding:10px 5px;
 border-bottom:1px solid rgba(255,255,255,0.25);
 }
 
-/* ===== TAMBAHAN HIGHLIGHT SAJA ===== */
 .highlight{
 background:#1b5e20;
 transition:0.3s;
@@ -227,7 +226,7 @@ String(n.getSeconds()).padStart(2,'0');
 setInterval(updateJam,1000);
 updateJam();
 
-/* ================= AZAN + IQOMAH ================= */
+/* ================= AZAN + IQOMAH (DITAMBAH LOGIKA JUMAT SAJA) ================= */
 const durasiAzan=180;
 const durasiIqomah=600;
 
@@ -236,14 +235,23 @@ const now=new Date();
 const waktu=["Subuh","Dzuhur","Ashar","Maghrib","Isya"];
 
 for(let w of waktu){
+
 let val=document.getElementById(w).innerText;
-if(!val.includes(":"))continue;
+if(!val.includes(":")) continue;
 
 let [j,m]=val.split(":");
 let target=new Date();
 target.setHours(j,m,0,0);
 
 let selisih=(now-target)/1000;
+
+/* KHUSUS JUMAT DZUHUR TIDAK IQOMAH */
+if(now.getDay()===5 && w==="Dzuhur"){
+if(selisih>=0){
+overlay.style.display="none";
+return;
+}
+}
 
 if(selisih>=0 && selisih<durasiAzan){
 overlay.style.display="flex";
@@ -271,73 +279,6 @@ overlay.style.display="none";
 }
 setInterval(kontrolShalat,1000);
 
-/* ================= COUNTDOWN 2 JAM ================= */
-function updateCountdown(){
-if(overlay.style.display==="flex"){countdown.textContent="";return;}
-const now=new Date();
-const waktu=["Subuh","Dzuhur","Ashar","Maghrib","Isya"];
-let next=null,name="";
-for(let w of waktu){
-let val=document.getElementById(w).innerText;
-if(!val.includes(":"))continue;
-let [j,m]=val.split(":");
-let target=new Date();
-target.setHours(j,m,0,0);
-if(target>now){next=target;name=w;break;}
-}
-if(!next){
-let val=document.getElementById("Subuh").innerText;
-let [j,m]=val.split(":");
-next=new Date();
-next.setDate(now.getDate()+1);
-next.setHours(j,m,0,0);
-name="Subuh";
-}
-let diff=(next-now)/1000;
-if(diff<=7200 && diff>0){
-let hh=Math.floor(diff/3600);
-let mm=Math.floor((diff%3600)/60);
-let ss=Math.floor(diff%60);
-countdown.textContent="Menuju "+name+" : "+
-String(hh).padStart(2,'0')+":"+
-String(mm).padStart(2,'0')+":"+
-String(ss).padStart(2,'0');
-}else{countdown.textContent="";}
-}
-setInterval(updateCountdown,1000);
-updateCountdown();
-
-/* ================= HIGHLIGHT 2 JAM (TAMBAHAN SAJA) ================= */
-function highlightMenuju(){
-if(overlay.style.display==="flex") return;
-
-document.querySelectorAll(".sholat")
-.forEach(el=>el.classList.remove("highlight"));
-
-const now=new Date();
-const waktu=["Subuh","Dzuhur","Ashar","Maghrib","Isya"];
-
-for(let w of waktu){
-let el=document.getElementById(w);
-if(!el) continue;
-
-let val=el.innerText;
-if(!val.includes(":")) continue;
-
-let [j,m]=val.split(":");
-let target=new Date();
-target.setHours(j,m,0,0);
-
-let diff=(target-now)/1000;
-
-if(diff>0 && diff<=7200){
-el.parentElement.classList.add("highlight");
-break;
-}
-}
-}
-setInterval(highlightMenuju,1000);
-
 /* ================= AUTO RELOAD ================= */
 setInterval(()=>{
 let n=new Date();
@@ -348,4 +289,3 @@ if(n.getHours()==0 && n.getMinutes()==0){location.reload();}
 
 </body>
 </html>
-
