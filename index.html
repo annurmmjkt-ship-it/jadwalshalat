@@ -24,6 +24,12 @@ padding:10px 5px;
 border-bottom:1px solid rgba(255,255,255,0.25);
 }
 
+/* ===== TAMBAHAN HIGHLIGHT SAJA ===== */
+.highlight{
+background:#1b5e20;
+transition:0.3s;
+}
+
 .link-info{
 text-align:center;
 margin-top:15px;
@@ -301,6 +307,37 @@ String(ss).padStart(2,'0');
 setInterval(updateCountdown,1000);
 updateCountdown();
 
+/* ================= HIGHLIGHT 2 JAM (TAMBAHAN SAJA) ================= */
+function highlightMenuju(){
+if(overlay.style.display==="flex") return;
+
+document.querySelectorAll(".sholat")
+.forEach(el=>el.classList.remove("highlight"));
+
+const now=new Date();
+const waktu=["Subuh","Dzuhur","Ashar","Maghrib","Isya"];
+
+for(let w of waktu){
+let el=document.getElementById(w);
+if(!el) continue;
+
+let val=el.innerText;
+if(!val.includes(":")) continue;
+
+let [j,m]=val.split(":");
+let target=new Date();
+target.setHours(j,m,0,0);
+
+let diff=(target-now)/1000;
+
+if(diff>0 && diff<=7200){
+el.parentElement.classList.add("highlight");
+break;
+}
+}
+}
+setInterval(highlightMenuju,1000);
+
 /* ================= AUTO RELOAD ================= */
 setInterval(()=>{
 let n=new Date();
@@ -311,5 +348,3 @@ if(n.getHours()==0 && n.getMinutes()==0){location.reload();}
 
 </body>
 </html>
-
-
