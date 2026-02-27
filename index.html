@@ -24,11 +24,6 @@ padding:10px 5px;
 border-bottom:1px solid rgba(255,255,255,0.25);
 }
 
-.highlight{
-background:#1b5e20;
-transition:0.3s;
-}
-
 .link-info{
 text-align:center;
 margin-top:15px;
@@ -60,6 +55,24 @@ background:black;color:white;display:flex;
 flex-direction:column;justify-content:center;align-items:center;
 z-index:9999;text-align:center;display:none;
 }
+
+@media (min-width:1024px){
+body{overflow:hidden;}
+.brand{position:fixed;top:15px;left:25px;text-align:left;font-size:32px;}
+.header{padding:20px;font-size:26px;}
+#tanggal{font-size:18px;}
+#hijriyah{font-size:16px;}
+.container{flex-direction:row;height:60vh;padding:30px 60px;}
+.left{flex:1;display:flex;flex-direction:column;justify-content:center;}
+.right{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;}
+.sholat{font-size:33px;}
+.link-info{font-size:22px;margin-top:25px;}
+.jam{font-size:80px;}
+.countdown{font-size:20px;}
+.qris-img{width:250px;}
+.running{height:45px;}
+.track{font-size:25px;animation:jalan 50s linear infinite;}
+}
 </style>
 </head>
 
@@ -78,6 +91,7 @@ JADWAL SHALAT
 </div>
 
 <div class="container">
+
 <div class="left">
 <div class="sholat">Imsak <span id="Imsak">--</span></div>
 <div class="sholat">Subuh <span id="Subuh">--</span></div>
@@ -85,21 +99,26 @@ JADWAL SHALAT
 <div class="sholat">Ashar <span id="Ashar">--</span></div>
 <div class="sholat">Maghrib <span id="Maghrib">--</span></div>
 <div class="sholat">Isya <span id="Isya">--</span></div>
-<div class="link-info">www.bit.ly/annurmm</div>
+
+<div class="link-info">
+www.bit.ly/annurmm
+</div>
 </div>
 
 <div class="right">
 <div class="jam" id="jam">00:00:00</div>
 <div class="countdown" id="countdown"></div>
+
 <div class="qris-box">
 <img src="qris.png" class="qris-img">
 </div>
 </div>
+
 </div>
 
 <div class="running">
 <div class="track">
-🕌 Masjid An Nur Menara Mandiri Jakarta • Luruskan dan rapatkan shaf • Matikan HP saat shalat • Salurkan Infaq & Shodaqoh melalui QRIS atau Rekening Bank Mandiri 1020030005000 • Jamaah dapat mengakses dari HP masing2 jadwal shalat online melalui website www.bit.ly/annurmm
+🕌 Masjid An Nur Menara Mandiri Jakarta • Luruskan dan rapatkan shaf • Matikan HP saat shalat • Salurkan Infaq & Shodaqoh melalui QRIS atau Rekening Bank Mandiri 1020030005000 • Jamaah dapat mengakses jadwal shalat online di www.bit.ly/annurmm
 </div>
 </div>
 
@@ -166,6 +185,7 @@ Dzuhur.textContent=t.dzuhur;
 Ashar.textContent=t.ashar;
 Maghrib.textContent=t.maghrib;
 Isya.textContent=t.isya;
+
 hijriyah.textContent=t.tanggal_hijriyah;
 }catch{}
 }
@@ -201,37 +221,85 @@ String(n.getSeconds()).padStart(2,'0');
 setInterval(updateJam,1000);
 updateJam();
 
-/* ================= COUNTDOWN 2 JAM ================= */
-function countdownDuaJam(){
-if(overlay.style.display==="flex") return;
+/* ================= AZAN + IQOMAH ================= */
+const durasiAzan=180;
+const durasiIqomah=600;
 
+function kontrolShalat(){
 const now=new Date();
 const waktu=["Subuh","Dzuhur","Ashar","Maghrib","Isya"];
 
 for(let w of waktu){
 let val=document.getElementById(w).innerText;
-if(!val.includes(":")) continue;
+if(!val.includes(":"))continue;
 
 let [j,m]=val.split(":");
 let target=new Date();
 target.setHours(j,m,0,0);
 
-let diff=(target-now)/1000;
+let selisih=(now-target)/1000;
 
-if(diff>0 && diff<=7200){
-let mm=Math.floor(diff/60);
-let ss=Math.floor(diff%60);
-countdown.textContent=
-"Menuju "+w+" : "+
-String(mm).padStart(2,'0')+":"+
-String(ss).padStart(2,'0');
+if(selisih>=0 && selisih<durasiAzan){
+overlay.style.display="flex";
+overlay.innerHTML=
+`<div style="font-size:60px;">AZAN WAKTU SHALAT ${w.toUpperCase()}</div>
+<div style="font-size:150px;margin-top:20px;">${val}</div>`;
+return;
+}
+
+if(selisih>=durasiAzan && selisih<(durasiAzan+durasiIqomah)){
+let sisa=(durasiAzan+durasiIqomah)-selisih;
+let mm=Math.floor(sisa/60);
+let ss=Math.floor(sisa%60);
+overlay.style.display="flex";
+overlay.innerHTML=
+`<div style="font-size:80px;">IQOMAH ${w.toUpperCase()}</div>
+<div style="font-size:180px;color:red;font-weight:bold;">
+${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}
+</div>`;
 return;
 }
 }
 
-countdown.textContent="";
+overlay.style.display="none";
 }
-setInterval(countdownDuaJam,1000);
+setInterval(kontrolShalat,1000);
+
+/* ================= COUNTDOWN 2 JAM ================= */
+function updateCountdown(){
+if(overlay.style.display==="flex"){countdown.textContent="";return;}
+const now=new Date();
+const waktu=["Subuh","Dzuhur","Ashar","Maghrib","Isya"];
+let next=null,name="";
+for(let w of waktu){
+let val=document.getElementById(w).innerText;
+if(!val.includes(":"))continue;
+let [j,m]=val.split(":");
+let target=new Date();
+target.setHours(j,m,0,0);
+if(target>now){next=target;name=w;break;}
+}
+if(!next){
+let val=document.getElementById("Subuh").innerText;
+let [j,m]=val.split(":");
+next=new Date();
+next.setDate(now.getDate()+1);
+next.setHours(j,m,0,0);
+name="Subuh";
+}
+let diff=(next-now)/1000;
+if(diff<=7200 && diff>0){
+let hh=Math.floor(diff/3600);
+let mm=Math.floor((diff%3600)/60);
+let ss=Math.floor(diff%60);
+countdown.textContent="Menuju "+name+" : "+
+String(hh).padStart(2,'0')+":"+
+String(mm).padStart(2,'0')+":"+
+String(ss).padStart(2,'0');
+}else{countdown.textContent="";}
+}
+setInterval(updateCountdown,1000);
+updateCountdown();
 
 /* ================= AUTO RELOAD ================= */
 setInterval(()=>{
@@ -240,5 +308,9 @@ if(n.getHours()==0 && n.getMinutes()==0){location.reload();}
 },60000);
 
 </script>
+
 </body>
 </html>
+
+
+
