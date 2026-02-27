@@ -22,6 +22,16 @@ align-items:center;
 font-size:18px;
 padding:10px 5px;
 border-bottom:1px solid rgba(255,255,255,0.25);
+transition:0.3s;
+}
+
+/* ===== HIGHLIGHT 2 JAM ===== */
+.highlight{
+background:rgba(255,215,0,0.15);
+color:#ffd700;
+font-weight:bold;
+box-shadow:0 0 15px rgba(255,215,0,0.6);
+border-radius:6px;
 }
 
 .link-info{
@@ -133,7 +143,7 @@ tanggal.textContent=new Date().toLocaleDateString(
 const ramadhanStart=new Date(2026,1,19);
 const ramadhanEnd=new Date(2026,2,20);
 
-const ramadhanData=[
+const ramadhanData=[ /* DATA TETAP SAMA */
 ["04:31","04:41","12:10","15:20","18:18","19:28"],
 ["04:32","04:42","12:10","15:19","18:18","19:28"],
 ["04:32","04:42","12:10","15:19","18:17","19:27"],
@@ -166,7 +176,7 @@ const ramadhanData=[
 ["04:32","04:42","12:04","15:13","18:07","19:15"]
 ];
 
-/* ================= API KEMENAG ================= */
+/* ================= API ================= */
 async function pakaiKemenag(){
 try{
 const d=new Date();
@@ -185,12 +195,10 @@ Dzuhur.textContent=t.dzuhur;
 Ashar.textContent=t.ashar;
 Maghrib.textContent=t.maghrib;
 Isya.textContent=t.isya;
-
 hijriyah.textContent=t.tanggal_hijriyah;
 }catch{}
 }
 
-/* ================= CEK HYBRID ================= */
 function cekHybrid(){
 const today=new Date();
 if(today>=ramadhanStart && today<=ramadhanEnd){
@@ -203,9 +211,7 @@ Ashar.textContent=d[3];
 Maghrib.textContent=d[4];
 Isya.textContent=d[5];
 hijriyah.textContent=(diff+1)+" Ramadhan 1447 H";
-}else{
-pakaiKemenag();
-}
+}else{pakaiKemenag();}
 }
 cekHybrid();
 setInterval(cekHybrid,3600000);
@@ -221,11 +227,39 @@ String(n.getSeconds()).padStart(2,'0');
 setInterval(updateJam,1000);
 updateJam();
 
+/* ================= HIGHLIGHT 2 JAM ================= */
+function highlightShalat(){
+const now=new Date();
+const waktu=["Subuh","Dzuhur","Ashar","Maghrib","Isya"];
+
+waktu.forEach(w=>{
+document.getElementById(w).parentElement.classList.remove("highlight");
+});
+
+for(let w of waktu){
+let val=document.getElementById(w).innerText;
+if(!val.includes(":")) continue;
+
+let [j,m]=val.split(":");
+let target=new Date();
+target.setHours(j,m,0,0);
+
+let diff=(target-now)/1000;
+if(diff>0 && diff<=7200){
+document.getElementById(w).parentElement.classList.add("highlight");
+break;
+}
+}
+}
+setInterval(highlightShalat,1000);
+
 /* ================= AZAN + IQOMAH ================= */
 const durasiAzan=180;
 const durasiIqomah=600;
 
 function kontrolShalat(){
+if(!Subuh.innerText.includes(":")) return;
+
 const now=new Date();
 const waktu=["Subuh","Dzuhur","Ashar","Maghrib","Isya"];
 
@@ -265,7 +299,7 @@ overlay.style.display="none";
 }
 setInterval(kontrolShalat,1000);
 
-/* ================= COUNTDOWN 2 JAM ================= */
+/* ================= COUNTDOWN ================= */
 function updateCountdown(){
 if(overlay.style.display==="flex"){countdown.textContent="";return;}
 const now=new Date();
@@ -299,7 +333,6 @@ String(ss).padStart(2,'0');
 }else{countdown.textContent="";}
 }
 setInterval(updateCountdown,1000);
-updateCountdown();
 
 /* ================= AUTO RELOAD ================= */
 setInterval(()=>{
@@ -311,6 +344,3 @@ if(n.getHours()==0 && n.getMinutes()==0){location.reload();}
 
 </body>
 </html>
-
-
-
