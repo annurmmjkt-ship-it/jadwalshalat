@@ -201,11 +201,10 @@ String(n.getSeconds()).padStart(2,'0');
 setInterval(updateJam,1000);
 updateJam();
 
-/* ================= AZAN + IQOMAH + JUMAT ================= */
-const durasiAzan=180;
-const durasiIqomah=600;
+/* ================= COUNTDOWN 2 JAM ================= */
+function countdownDuaJam(){
+if(overlay.style.display==="flex") return;
 
-function kontrolShalat(){
 const now=new Date();
 const waktu=["Subuh","Dzuhur","Ashar","Maghrib","Isya"];
 
@@ -217,73 +216,22 @@ let [j,m]=val.split(":");
 let target=new Date();
 target.setHours(j,m,0,0);
 
-let selisih=(now-target)/1000;
-
-/* KHUSUS JUMAT DZUHUR */
-if(now.getDay()===5 && w==="Dzuhur"){
-if(selisih>=0 && selisih<240){
-overlay.style.display="flex";
-overlay.innerHTML=
-`<div style="font-size:60px;">AZAN SHALAT JUMAT</div>
-<div style="font-size:150px;margin-top:20px;">${val}</div>`;
-return;
-}
-if(selisih>=240){
-overlay.style.display="none";
-return;
-}
-}
-
-/* NORMAL AZAN */
-if(selisih>=0 && selisih<durasiAzan){
-overlay.style.display="flex";
-overlay.innerHTML=
-`<div style="font-size:60px;">AZAN WAKTU SHALAT ${w.toUpperCase()}</div>
-<div style="font-size:150px;margin-top:20px;">${val}</div>`;
-return;
-}
-
-/* NORMAL IQOMAH */
-if(selisih>=durasiAzan && selisih<(durasiAzan+durasiIqomah)){
-let sisa=(durasiAzan+durasiIqomah)-selisih;
-let mm=Math.floor(sisa/60);
-let ss=Math.floor(sisa%60);
-overlay.style.display="flex";
-overlay.innerHTML=
-`<div style="font-size:80px;">IQOMAH ${w.toUpperCase()}</div>
-<div style="font-size:180px;color:red;font-weight:bold;">
-${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}
-</div>`;
-return;
-}
-}
-overlay.style.display="none";
-}
-setInterval(kontrolShalat,1000);
-
-/* ================= HIGHLIGHT 2 JAM ================= */
-function highlightMenuju(){
-if(overlay.style.display==="flex") return;
-document.querySelectorAll(".sholat")
-.forEach(el=>el.classList.remove("highlight"));
-const now=new Date();
-const waktu=["Subuh","Dzuhur","Ashar","Maghrib","Isya"];
-for(let w of waktu){
-let el=document.getElementById(w);
-if(!el) continue;
-let val=el.innerText;
-if(!val.includes(":")) continue;
-let [j,m]=val.split(":");
-let target=new Date();
-target.setHours(j,m,0,0);
 let diff=(target-now)/1000;
+
 if(diff>0 && diff<=7200){
-el.parentElement.classList.add("highlight");
-break;
+let mm=Math.floor(diff/60);
+let ss=Math.floor(diff%60);
+countdown.textContent=
+"Menuju "+w+" : "+
+String(mm).padStart(2,'0')+":"+
+String(ss).padStart(2,'0');
+return;
 }
 }
+
+countdown.textContent="";
 }
-setInterval(highlightMenuju,1000);
+setInterval(countdownDuaJam,1000);
 
 /* ================= AUTO RELOAD ================= */
 setInterval(()=>{
