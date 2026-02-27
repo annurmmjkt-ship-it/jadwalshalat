@@ -60,24 +60,6 @@ background:black;color:white;display:flex;
 flex-direction:column;justify-content:center;align-items:center;
 z-index:9999;text-align:center;display:none;
 }
-
-@media (min-width:1024px){
-body{overflow:hidden;}
-.brand{position:fixed;top:15px;left:25px;text-align:left;font-size:32px;}
-.header{padding:20px;font-size:26px;}
-#tanggal{font-size:18px;}
-#hijriyah{font-size:16px;}
-.container{flex-direction:row;height:60vh;padding:30px 60px;}
-.left{flex:1;display:flex;flex-direction:column;justify-content:center;}
-.right{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;}
-.sholat{font-size:33px;}
-.link-info{font-size:22px;margin-top:25px;}
-.jam{font-size:80px;}
-.countdown{font-size:20px;}
-.qris-img{width:250px;}
-.running{height:45px;}
-.track{font-size:25px;animation:jalan 50s linear infinite;}
-}
 </style>
 </head>
 
@@ -96,7 +78,6 @@ JADWAL SHALAT
 </div>
 
 <div class="container">
-
 <div class="left">
 <div class="sholat">Imsak <span id="Imsak">--</span></div>
 <div class="sholat">Subuh <span id="Subuh">--</span></div>
@@ -104,21 +85,16 @@ JADWAL SHALAT
 <div class="sholat">Ashar <span id="Ashar">--</span></div>
 <div class="sholat">Maghrib <span id="Maghrib">--</span></div>
 <div class="sholat">Isya <span id="Isya">--</span></div>
-
-<div class="link-info">
-www.bit.ly/annurmm
-</div>
+<div class="link-info">www.bit.ly/annurmm</div>
 </div>
 
 <div class="right">
 <div class="jam" id="jam">00:00:00</div>
 <div class="countdown" id="countdown"></div>
-
 <div class="qris-box">
 <img src="qris.png" class="qris-img">
 </div>
 </div>
-
 </div>
 
 <div class="running">
@@ -190,7 +166,6 @@ Dzuhur.textContent=t.dzuhur;
 Ashar.textContent=t.ashar;
 Maghrib.textContent=t.maghrib;
 Isya.textContent=t.isya;
-
 hijriyah.textContent=t.tanggal_hijriyah;
 }catch{}
 }
@@ -226,7 +201,7 @@ String(n.getSeconds()).padStart(2,'0');
 setInterval(updateJam,1000);
 updateJam();
 
-/* ================= AZAN + IQOMAH (DITAMBAH LOGIKA JUMAT SAJA) ================= */
+/* ================= AZAN + IQOMAH + JUMAT ================= */
 const durasiAzan=180;
 const durasiIqomah=600;
 
@@ -235,7 +210,6 @@ const now=new Date();
 const waktu=["Subuh","Dzuhur","Ashar","Maghrib","Isya"];
 
 for(let w of waktu){
-
 let val=document.getElementById(w).innerText;
 if(!val.includes(":")) continue;
 
@@ -245,14 +219,22 @@ target.setHours(j,m,0,0);
 
 let selisih=(now-target)/1000;
 
-/* KHUSUS JUMAT DZUHUR TIDAK IQOMAH */
+/* KHUSUS JUMAT DZUHUR */
 if(now.getDay()===5 && w==="Dzuhur"){
-if(selisih>=0){
+if(selisih>=0 && selisih<240){
+overlay.style.display="flex";
+overlay.innerHTML=
+`<div style="font-size:60px;">AZAN SHALAT JUMAT</div>
+<div style="font-size:150px;margin-top:20px;">${val}</div>`;
+return;
+}
+if(selisih>=240){
 overlay.style.display="none";
 return;
 }
 }
 
+/* NORMAL AZAN */
 if(selisih>=0 && selisih<durasiAzan){
 overlay.style.display="flex";
 overlay.innerHTML=
@@ -261,6 +243,7 @@ overlay.innerHTML=
 return;
 }
 
+/* NORMAL IQOMAH */
 if(selisih>=durasiAzan && selisih<(durasiAzan+durasiIqomah)){
 let sisa=(durasiAzan+durasiIqomah)-selisih;
 let mm=Math.floor(sisa/60);
@@ -274,10 +257,33 @@ ${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}
 return;
 }
 }
-
 overlay.style.display="none";
 }
 setInterval(kontrolShalat,1000);
+
+/* ================= HIGHLIGHT 2 JAM ================= */
+function highlightMenuju(){
+if(overlay.style.display==="flex") return;
+document.querySelectorAll(".sholat")
+.forEach(el=>el.classList.remove("highlight"));
+const now=new Date();
+const waktu=["Subuh","Dzuhur","Ashar","Maghrib","Isya"];
+for(let w of waktu){
+let el=document.getElementById(w);
+if(!el) continue;
+let val=el.innerText;
+if(!val.includes(":")) continue;
+let [j,m]=val.split(":");
+let target=new Date();
+target.setHours(j,m,0,0);
+let diff=(target-now)/1000;
+if(diff>0 && diff<=7200){
+el.parentElement.classList.add("highlight");
+break;
+}
+}
+}
+setInterval(highlightMenuju,1000);
 
 /* ================= AUTO RELOAD ================= */
 setInterval(()=>{
@@ -286,6 +292,5 @@ if(n.getHours()==0 && n.getMinutes()==0){location.reload();}
 },60000);
 
 </script>
-
 </body>
 </html>
