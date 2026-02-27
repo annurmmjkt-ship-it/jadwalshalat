@@ -162,13 +162,17 @@ function highlightNext(){
 document.querySelectorAll('.sholat').forEach(el=>el.classList.remove("highlight"));
 const now=new Date();
 const waktu=["Subuh","Dzuhur","Ashar","Maghrib","Isya"];
+
 for(let w of waktu){
 let val=document.getElementById(w).innerText;
-if(!val.includes(":"))continue;
+if(!val.includes(":")) continue;
+
 let [j,m]=val.split(":");
 let target=new Date();
-target.setHours(j,m,0,0);
+target.setHours(parseInt(j),parseInt(m),0,0);
+
 let diff=(target-now)/1000;
+
 if(diff>0 && diff<=7200){
 document.getElementById("box"+w).classList.add("highlight");
 break;
@@ -182,6 +186,7 @@ function updateCountdown(){
 const now=new Date();
 const waktu=["Subuh","Dzuhur","Ashar","Maghrib","Isya"];
 let next=null,name="";
+
 for(let w of waktu){
 let val=document.getElementById(w).innerText;
 if(!val.includes(":"))continue;
@@ -190,6 +195,7 @@ let target=new Date();
 target.setHours(j,m,0,0);
 if(target>now){next=target;name=w;break;}
 }
+
 if(!next){
 let val=document.getElementById("Subuh").innerText;
 let [j,m]=val.split(":");
@@ -198,7 +204,9 @@ next.setDate(now.getDate()+1);
 next.setHours(j,m,0,0);
 name="Subuh";
 }
+
 let diff=(next-now)/1000;
+
 if(diff<=7200 && diff>0){
 let hh=Math.floor(diff/3600);
 let mm=Math.floor((diff%3600)/60);
@@ -207,7 +215,9 @@ countdown.textContent="Menuju "+name+" : "+
 String(hh).padStart(2,'0')+":"+
 String(mm).padStart(2,'0')+":"+
 String(ss).padStart(2,'0');
-}else{countdown.textContent="";}
+}else{
+countdown.textContent="";
+}
 }
 setInterval(updateCountdown,1000);
 
