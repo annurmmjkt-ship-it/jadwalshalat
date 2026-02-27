@@ -22,11 +22,6 @@ align-items:center;
 font-size:18px;
 padding:10px 5px;
 border-bottom:1px solid rgba(255,255,255,0.25);
-transition:0.4s;
-}
-
-.highlight{
-background:#1b5e20;
 }
 
 .link-info{
@@ -50,7 +45,7 @@ display:flex;align-items:center;overflow:hidden;
 }
 .track{
 white-space:nowrap;padding-left:100%;
-animation:jalan 30s linear infinite;font-size:23px;color:#00ffcc;
+animation:jalan 30s linear infinite;font-size:13px;color:#00ffcc;
 }
 @keyframes jalan{0%{transform:translateX(0);}100%{transform:translateX(-100%);}}
 
@@ -98,15 +93,15 @@ JADWAL SHALAT
 <div class="container">
 
 <div class="left">
-<div class="sholat" id="boxImsak">Imsak <span id="Imsak">--</span></div>
-<div class="sholat" id="boxSubuh">Subuh <span id="Subuh">--</span></div>
-<div class="sholat" id="boxDzuhur"><span id="labelDzuhur">Dzuhur</span> <span id="Dzuhur">--</span></div>
-<div class="sholat" id="boxAshar">Ashar <span id="Ashar">--</span></div>
-<div class="sholat" id="boxMaghrib">Maghrib <span id="Maghrib">--</span></div>
-<div class="sholat" id="boxIsya">Isya <span id="Isya">--</span></div>
+<div class="sholat">Imsak <span id="Imsak">--</span></div>
+<div class="sholat">Subuh <span id="Subuh">--</span></div>
+<div class="sholat">Dzuhur <span id="Dzuhur">--</span></div>
+<div class="sholat">Ashar <span id="Ashar">--</span></div>
+<div class="sholat">Maghrib <span id="Maghrib">--</span></div>
+<div class="sholat">Isya <span id="Isya">--</span></div>
 
 <div class="link-info">
-www.bit.ly/annurmm
+www.bit.ly/jadwalmandiri
 </div>
 </div>
 
@@ -123,28 +118,97 @@ www.bit.ly/annurmm
 
 <div class="running">
 <div class="track">
-🕌 Masjid An Nur Menara Mandiri Jakarta • Luruskan dan rapatkan shaf • Matikan HP saat shalat • Salurkan Infaq & Shodaqoh melalui QRIS atau Rekening Bank Mandiri 1020030005000 • Jamaah dapat mengakses jadwal shalat online di www.bit.ly/annurmm
+🕌 Masjid An Nur Menara Mandiri Jakarta • Luruskan dan rapatkan shaf • Matikan HP saat shalat • Salurkan Infaq & Shodaqoh melalui QRIS
 </div>
 </div>
 
 <script>
 
 /* ================= TANGGAL ================= */
-function updateTanggal(){
-document.getElementById("tanggal").textContent=
-new Date().toLocaleDateString(
+tanggal.textContent=new Date().toLocaleDateString(
 'id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'}
 );
-}
-updateTanggal();
 
-/* ================= MODE JUMAT ================= */
-function modeJumat(){
-if(new Date().getDay()===5){
-document.getElementById("labelDzuhur").textContent="JUMAT";
+/* ================= RAMADHAN OFFLINE ================= */
+const ramadhanStart=new Date(2026,1,19);
+const ramadhanEnd=new Date(2026,2,20);
+
+const ramadhanData=[
+["04:31","04:41","12:10","15:20","18:18","19:28"],
+["04:32","04:42","12:10","15:19","18:18","19:28"],
+["04:32","04:42","12:10","15:19","18:17","19:27"],
+["04:32","04:42","12:10","15:18","18:17","19:27"],
+["04:32","04:42","12:10","15:17","18:17","19:26"],
+["04:32","04:42","12:09","15:16","18:17","19:26"],
+["04:32","04:42","12:09","15:15","18:16","19:26"],
+["04:32","04:42","12:09","15:15","18:16","19:25"],
+["04:33","04:43","12:09","15:14","18:16","19:25"],
+["04:33","04:43","12:09","15:13","18:15","19:24"],
+["04:33","04:43","12:09","15:12","18:15","19:24"],
+["04:33","04:43","12:08","15:11","18:14","19:24"],
+["04:33","04:43","12:08","15:10","18:14","19:23"],
+["04:33","04:43","12:08","15:09","18:14","19:23"],
+["04:33","04:43","12:08","15:08","18:13","19:22"],
+["04:33","04:43","12:07","15:08","18:13","19:22"],
+["04:33","04:43","12:07","15:09","18:12","19:21"],
+["04:33","04:43","12:07","15:09","18:12","19:21"],
+["04:33","04:43","12:07","15:10","18:12","19:20"],
+["04:33","04:43","12:06","15:10","18:11","19:20"],
+["04:33","04:43","12:06","15:10","18:11","19:19"],
+["04:33","04:43","12:06","15:11","18:10","19:19"],
+["04:33","04:43","12:06","15:11","18:10","19:18"],
+["04:33","04:43","12:05","15:11","18:09","19:18"],
+["04:33","04:43","12:05","15:12","18:09","19:17"],
+["04:33","04:43","12:05","15:12","18:09","19:17"],
+["04:32","04:42","12:05","15:12","18:08","19:16"],
+["04:32","04:42","12:04","15:12","18:08","19:16"],
+["04:32","04:42","12:04","15:13","18:07","19:16"],
+["04:32","04:42","12:04","15:13","18:07","19:15"]
+];
+
+/* ================= API KEMENAG ================= */
+async function pakaiKemenag(){
+try{
+const d=new Date();
+const tahun=d.getFullYear();
+const bulan=String(d.getMonth()+1).padStart(2,'0');
+const tanggalNow=String(d.getDate()).padStart(2,'0');
+const kota="1301";
+
+const res=await fetch(`https://api.myquran.com/v2/sholat/jadwal/${kota}/${tahun}/${bulan}/${tanggalNow}`);
+const json=await res.json();
+const t=json.data.jadwal;
+
+Imsak.textContent=t.imsak;
+Subuh.textContent=t.subuh;
+Dzuhur.textContent=t.dzuhur;
+Ashar.textContent=t.ashar;
+Maghrib.textContent=t.maghrib;
+Isya.textContent=t.isya;
+
+hijriyah.textContent=t.tanggal_hijriyah;
+}catch{}
+}
+
+/* ================= CEK HYBRID ================= */
+function cekHybrid(){
+const today=new Date();
+if(today>=ramadhanStart && today<=ramadhanEnd){
+let diff=Math.floor((today-ramadhanStart)/(1000*60*60*24));
+let d=ramadhanData[diff];
+Imsak.textContent=d[0];
+Subuh.textContent=d[1];
+Dzuhur.textContent=d[2];
+Ashar.textContent=d[3];
+Maghrib.textContent=d[4];
+Isya.textContent=d[5];
+hijriyah.textContent=(diff+1)+" Ramadhan 1447 H";
+}else{
+pakaiKemenag();
 }
 }
-modeJumat();
+cekHybrid();
+setInterval(cekHybrid,3600000);
 
 /* ================= JAM ================= */
 function updateJam(){
@@ -157,36 +221,56 @@ String(n.getSeconds()).padStart(2,'0');
 setInterval(updateJam,1000);
 updateJam();
 
-/* ================= HIGHLIGHT 2 JAM ================= */
-function highlightNext(){
-document.querySelectorAll('.sholat').forEach(el=>el.classList.remove("highlight"));
+/* ================= AZAN + IQOMAH ================= */
+const durasiAzan=180;
+const durasiIqomah=600;
+
+function kontrolShalat(){
 const now=new Date();
 const waktu=["Subuh","Dzuhur","Ashar","Maghrib","Isya"];
 
 for(let w of waktu){
 let val=document.getElementById(w).innerText;
-if(!val.includes(":")) continue;
+if(!val.includes(":"))continue;
 
 let [j,m]=val.split(":");
 let target=new Date();
-target.setHours(parseInt(j),parseInt(m),0,0);
+target.setHours(j,m,0,0);
 
-let diff=(target-now)/1000;
+let selisih=(now-target)/1000;
 
-if(diff>0 && diff<=7200){
-document.getElementById("box"+w).classList.add("highlight");
-break;
+if(selisih>=0 && selisih<durasiAzan){
+overlay.style.display="flex";
+overlay.innerHTML=
+`<div style="font-size:60px;">AZAN WAKTU SHALAT ${w.toUpperCase()}</div>
+<div style="font-size:150px;margin-top:20px;">${val}</div>`;
+return;
+}
+
+if(selisih>=durasiAzan && selisih<(durasiAzan+durasiIqomah)){
+let sisa=(durasiAzan+durasiIqomah)-selisih;
+let mm=Math.floor(sisa/60);
+let ss=Math.floor(sisa%60);
+overlay.style.display="flex";
+overlay.innerHTML=
+`<div style="font-size:80px;">IQOMAH ${w.toUpperCase()}</div>
+<div style="font-size:180px;color:red;font-weight:bold;">
+${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}
+</div>`;
+return;
 }
 }
-}
-setInterval(highlightNext,1000);
 
-/* ================= COUNTDOWN ================= */
+overlay.style.display="none";
+}
+setInterval(kontrolShalat,1000);
+
+/* ================= COUNTDOWN 2 JAM ================= */
 function updateCountdown(){
+if(overlay.style.display==="flex"){countdown.textContent="";return;}
 const now=new Date();
 const waktu=["Subuh","Dzuhur","Ashar","Maghrib","Isya"];
 let next=null,name="";
-
 for(let w of waktu){
 let val=document.getElementById(w).innerText;
 if(!val.includes(":"))continue;
@@ -195,7 +279,6 @@ let target=new Date();
 target.setHours(j,m,0,0);
 if(target>now){next=target;name=w;break;}
 }
-
 if(!next){
 let val=document.getElementById("Subuh").innerText;
 let [j,m]=val.split(":");
@@ -204,9 +287,7 @@ next.setDate(now.getDate()+1);
 next.setHours(j,m,0,0);
 name="Subuh";
 }
-
 let diff=(next-now)/1000;
-
 if(diff<=7200 && diff>0){
 let hh=Math.floor(diff/3600);
 let mm=Math.floor((diff%3600)/60);
@@ -215,11 +296,16 @@ countdown.textContent="Menuju "+name+" : "+
 String(hh).padStart(2,'0')+":"+
 String(mm).padStart(2,'0')+":"+
 String(ss).padStart(2,'0');
-}else{
-countdown.textContent="";
-}
+}else{countdown.textContent="";}
 }
 setInterval(updateCountdown,1000);
+updateCountdown();
+
+/* ================= AUTO RELOAD ================= */
+setInterval(()=>{
+let n=new Date();
+if(n.getHours()==0 && n.getMinutes()==0){location.reload();}
+},60000);
 
 </script>
 
