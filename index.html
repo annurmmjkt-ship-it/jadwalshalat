@@ -173,38 +173,15 @@ Ashar.textContent=t.ashar;
 Maghrib.textContent=t.maghrib;
 Isya.textContent=t.isya;
 
-/* ===== TAMBAHAN HIJRIYAH API ===== */
-if(json.data.tanggal){
+/* TAMBAHAN HIJRIYAH API KEMENAG */
+if(t.tanggal_hijriyah){
+hijriyah.textContent=t.tanggal_hijriyah;
+}else if(json.data.tanggal){
 hijriyah.textContent=json.data.tanggal;
 }
 
 }catch{}
 }
-
-function cekHybrid(){
-const today=new Date();
-
-if(today>=ramadhanStart && today<=ramadhanEnd){
-
-let diff=Math.floor((today-ramadhanStart)/(1000*60*60*24));
-let d=ramadhanData[diff];
-
-Imsak.textContent=d[0];
-Subuh.textContent=d[1];
-Dzuhur.textContent=d[2];
-Ashar.textContent=d[3];
-Maghrib.textContent=d[4];
-Isya.textContent=d[5];
-
-hijriyah.textContent=(diff+1)+" Ramadhan 1447 H";
-
-}else{
-pakaiKemenag();
-}
-}
-
-cekHybrid();
-setInterval(cekHybrid,3600000);
 
 </script>
 </body>
