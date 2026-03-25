@@ -306,7 +306,7 @@ next.setHours(j,m,0,0);
 name="Subuh";
 }
 let diff=(next-now)/1000;
-if(diff<=7200 && diff>0){
+if(diff<=3600 && diff>0){
 let hh=Math.floor(diff/3600);
 let mm=Math.floor((diff%3600)/60);
 let ss=Math.floor(diff%60);
