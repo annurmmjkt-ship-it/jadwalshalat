@@ -118,56 +118,37 @@ tanggal.textContent=new Date().toLocaleDateString(
 'id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'}
 );
 
-/* ================= RAMADHAN OFFLINE ================= */
-const ramadhanStart=new Date(2026,1,19);
-const ramadhanEnd=new Date(2026,2,20);
-
-const ramadhanData=[ /* TETAP SAMA */ ];
-
-/* ================= API (DIGANTI MUSLIM PRO STYLE) ================= */
-async function pakaiKemenag(){
+/* ================= API KEMENAG FULL ONLINE ================= */
+async function ambilJadwal(){
 try{
-const lat = -6.2;
-const lon = 106.8;
+const d=new Date();
+const tahun=d.getFullYear();
+const bulan=String(d.getMonth()+1).padStart(2,'0');
+const tanggalNow=String(d.getDate()).padStart(2,'0');
 
-const res = await fetch(
-`https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lon}&method=4`
-);
+/* 1301 = Jakarta */
+const kota="1301";
 
-const json = await res.json();
-const t = json.data.timings;
+const res=await fetch(`https://api.myquran.com/v2/sholat/jadwal/${kota}/${tahun}/${bulan}/${tanggalNow}`);
+const json=await res.json();
+const t=json.data.jadwal;
 
-Imsak.textContent=t.Imsak;
-Subuh.textContent=t.Fajr;
-Dzuhur.textContent=t.Dhuhr;
-Ashar.textContent=t.Asr;
-Maghrib.textContent=t.Maghrib;
-Isya.textContent=t.Isha;
+Imsak.textContent=t.imsak;
+Subuh.textContent=t.subuh;
+Dzuhur.textContent=t.dzuhur;
+Ashar.textContent=t.ashar;
+Maghrib.textContent=t.maghrib;
+Isya.textContent=t.isya;
 
-hijriyah.textContent =
-json.data.date.hijri.day+" "+
-json.data.date.hijri.month.en+" "+
-json.data.date.hijri.year+" H";
+hijriyah.textContent=t.tanggal_hijriyah || "-";
 
-}catch{}
+}catch{
+hijriyah.textContent="-";
+}
 }
 
-function cekHybrid(){
-const today=new Date();
-if(today>=ramadhanStart && today<=ramadhanEnd){
-let diff=Math.floor((today-ramadhanStart)/(1000*60*60*24));
-let d=ramadhanData[diff];
-Imsak.textContent=d[0];
-Subuh.textContent=d[1];
-Dzuhur.textContent=d[2];
-Ashar.textContent=d[3];
-Maghrib.textContent=d[4];
-Isya.textContent=d[5];
-hijriyah.textContent=(diff+1)+" Ramadhan 1447 H";
-}else{pakaiKemenag();}
-}
-cekHybrid();
-setInterval(cekHybrid,3600000);
+ambilJadwal();
+setInterval(ambilJadwal,3600000);
 
 /* ================= JAM ================= */
 function updateJam(){
@@ -180,8 +161,7 @@ String(n.getSeconds()).padStart(2,'0');
 updateJam();
 setInterval(updateJam,1000);
 
-/* ===== SISANYA TETAP (TIDAK DIUBAH) ===== */
-/* highlight, azan, iqomah, countdown, dll tetap sama seperti punyamu */
+/* ===== SISANYA (HIGHLIGHT, AZAN, IQOMAH, DLL) TETAP ===== */
 
 </script>
 </body>
