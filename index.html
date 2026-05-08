@@ -191,7 +191,11 @@ hijriyah.textContent="-";
 }
 
 ambilJadwal();
-setInterval(ambilJadwal,3600000);
+
+/* reload total tiap 1 jam */
+setInterval(()=>{
+location.reload();
+},3600000);
 
 /* ================= JAM ================= */
 function updateJam(){
