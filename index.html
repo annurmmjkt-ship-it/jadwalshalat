@@ -329,5 +329,14 @@ if(n.getHours()==0 && n.getMinutes()==0){location.reload();}
 },60000);
 
 </script>
+
+<script>
+document.body.addEventListener("click",()=>{
+if(!document.fullscreenElement){
+document.documentElement.requestFullscreen();
+}
+});
+</script>
+
 </body>
 </html>
