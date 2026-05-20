@@ -1,342 +1,471 @@
+# Jadwal Shalat TV Online – Tampilan Live Zamzam TV
+
+Berikut contoh script lengkap jadwal shalat untuk TV masjid secara online dengan tampilan live streaming ala Zamzam TV.
+
+Fitur:
+
+* Fullscreen otomatis untuk Android TV
+* Jam digital besar
+* Jadwal shalat realtime
+* Tanggal Masehi & Hijriyah
+* Running text
+* Video/live streaming YouTube
+* Background elegan
+* Responsive untuk TV besar
+
+---
+
+```html
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>Masjid Digital HYBRID 2.0</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Masjid Live TV</title>
 
 <style>
-body{
+*{
 margin:0;
-font-family:Arial;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:Arial, sans-serif;
+background:#000;
 color:white;
-background:url("background.jpg") no-repeat center center fixed;
-background-size:cover;
-background-color:rgba(0,0,0,0.6);
-background-blend-mode:darken;
+overflow:hidden;
+height:100vh;
 }
 
-.brand{text-align:center;padding-top:12px;color:#ffd700;font-weight:bold;font-size:19px;line-height:1.2;}
-.header{text-align:center;margin-top:8px;font-size:17px;font-weight:bold;color:#ffd700;}
-#tanggal{margin-top:14px;font-size:25px;color:white;}
-#hijriyah{font-size:13px;color:#00ffcc;margin-top:2px;}
-
-.container{display:flex;flex-direction:column;padding:8px 15px 70px 15px;}
-.left{width:100%;}
-
-.sholat{
-display:flex;
-justify-content:space-between;
-align-items:center;
-font-size:18px;
-padding:10px 5px;
-border-bottom:1px solid rgba(255,255,255,0.25);
-transition:0.3s;
+/* ===== VIDEO BACKGROUND ===== */
+.video-bg{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+z-index:-2;
+overflow:hidden;
 }
 
-.highlight{
-background:rgba(255,215,0,0.15);
-color:#ffd700;
-font-weight:bold;
-box-shadow:0 0 15px rgba(255,215,0,0.6);
-border-radius:6px;
+.video-bg iframe{
+width:100vw;
+height:56.25vw;
+min-height:100vh;
+min-width:177.77vh;
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+pointer-events:none;
 }
-
-.link-info{
-text-align:center;
-margin-top:15px;
-font-size:15px;
-color:#ffd700;
-font-weight:bold;
-}
-
-.right{text-align:center;margin-top:18px;}
-.jam{font-size:42px;font-weight:bold;color:#ffd700;}
-.countdown{margin-top:6px;font-size:14px;color:#00ffcc;}
-
-.qris-box{margin-top:15px;text-align:center;}
-.qris-img{width:180px;max-width:80%;border-radius:8px;background:white;padding:5px;}
-
-.running{
-position:fixed;bottom:0;width:100%;background:black;height:36px;
-display:flex;align-items:center;overflow:hidden;
-}
-.track{
-white-space:nowrap;padding-left:100%;
-animation:jalan 25s linear infinite;font-size:23px;color:#00ffcc;
-}
-@keyframes jalan{0%{transform:translateX(0);}100%{transform:translateX(-100%);}}
 
 .overlay{
-position:fixed;top:0;left:0;width:100%;height:100vh;
-background:black;color:white;display:flex;
-flex-direction:column;justify-content:center;align-items:center;
-z-index:9999;text-align:center;display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.45);
+z-index:-1;
 }
 
-@media (min-width:1024px){
-body{overflow:hidden;}
-.brand{position:fixed;top:15px;left:25px;text-align:left;font-size:32px;}
-.header{padding:20px;font-size:26px;}
-#tanggal{font-size:30px;}
-#hijriyah{font-size:16px;}
-.container{flex-direction:row;height:60vh;padding:30px 60px;}
-.left{flex:1;display:flex;flex-direction:column;justify-content:center;}
-.right{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;}
-.sholat{font-size:33px;}
-.link-info{font-size:22px;margin-top:25px;}
-.jam{font-size:80px;}
-.countdown{font-size:20px;}
-.qris-img{width:250px;}
-.running{height:45px;}
-.track{font-size:25px;animation:jalan 50s linear infinite;}
+/* ===== HEADER ===== */
+.header{
+text-align:center;
+padding:15px;
+background:rgba(0,0,0,0.55);
+border-bottom:2px solid gold;
 }
+
+.masjid{
+font-size:42px;
+font-weight:bold;
+color:#ffd700;
+}
+
+.alamat{
+font-size:20px;
+margin-top:5px;
+}
+
+/* ===== MAIN ===== */
+.main{
+display:flex;
+height:calc(100vh - 170px);
+}
+
+/* ===== LEFT ===== */
+.left{
+width:38%;
+padding:20px;
+background:rgba(0,0,0,0.45);
+backdrop-filter:blur(3px);
+}
+
+.jam{
+font-size:90px;
+font-weight:bold;
+text-align:center;
+color:#00ffcc;
+margin-top:20px;
+}
+
+.tanggal{
+text-align:center;
+font-size:28px;
+margin-top:10px;
+line-height:1.6;
+}
+
+.hijriyah{
+color:#ffd700;
+}
+
+/* ===== JADWAL ===== */
+.jadwal{
+margin-top:30px;
+}
+
+.jadwal h2{
+text-align:center;
+margin-bottom:15px;
+font-size:34px;
+color:#ffd700;
+}
+
+.row{
+display:flex;
+justify-content:space-between;
+font-size:30px;
+padding:14px 20px;
+margin-bottom:10px;
+background:rgba(255,255,255,0.08);
+border-radius:12px;
+}
+
+.row:nth-child(even){
+background:rgba(255,215,0,0.12);
+}
+
+/* ===== RIGHT ===== */
+.right{
+width:62%;
+position:relative;
+}
+
+.live-label{
+position:absolute;
+top:15px;
+right:15px;
+background:red;
+padding:10px 18px;
+font-size:24px;
+font-weight:bold;
+border-radius:10px;
+animation:blink 1s infinite;
+}
+
+@keyframes blink{
+50%{
+opacity:0.4;
+}
+}
+
+.live-box{
+width:100%;
+height:100%;
+padding:20px;
+}
+
+.live-box iframe{
+width:100%;
+height:100%;
+border:none;
+border-radius:20px;
+box-shadow:0 0 25px rgba(0,0,0,0.7);
+}
+
+/* ===== RUNNING TEXT ===== */
+.marquee{
+position:fixed;
+bottom:0;
+left:0;
+width:100%;
+background:#ffd700;
+color:#000;
+padding:12px 0;
+font-size:28px;
+font-weight:bold;
+white-space:nowrap;
+overflow:hidden;
+}
+
+.marquee span{
+display:inline-block;
+padding-left:100%;
+animation:jalan 22s linear infinite;
+}
+
+@keyframes jalan{
+0%{transform:translateX(0);}
+100%{transform:translateX(-100%);}
+}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:1200px){
+.main{
+flex-direction:column;
+height:auto;
+overflow:auto;
+}
+
+.left,
+.right{
+width:100%;
+}
+
+.jam{
+font-size:70px;
+}
+
+.live-box{
+height:500px;
+}
+}
+
 </style>
 </head>
-
 <body>
 
-<div id="overlay" class="overlay"></div>
-
-<div class="brand">
-Masjid An Nur<br>Menara Mandiri
+<!-- VIDEO BACKGROUND -->
+<div class="video-bg">
+<iframe
+src="https://www.youtube.com/embed/HMpmI2F2cMs?autoplay=1&mute=1&controls=0&loop=1&playlist=HMpmI2F2cMs"
+allow="autoplay">
+</iframe>
 </div>
 
+<div class="overlay"></div>
+
+<!-- HEADER -->
 <div class="header">
-JADWAL SHALAT
-<div id="tanggal"></div>
-<div id="hijriyah"></div>
+<div class="masjid">MASJID JAMI ANNUR</div>
+<div class="alamat">Pasartanahtinggi - Jawa Barat</div>
 </div>
 
-<div class="container">
+<!-- MAIN -->
+<div class="main">
 
+<!-- LEFT -->
 <div class="left">
-<div class="sholat">Imsak <span id="Imsak">--</span></div>
-<div class="sholat">Subuh <span id="Subuh">--</span></div>
-<div class="sholat">Dzuhur <span id="Dzuhur">--</span></div>
-<div class="sholat">Ashar <span id="Ashar">--</span></div>
-<div class="sholat">Maghrib <span id="Maghrib">--</span></div>
-<div class="sholat">Isya <span id="Isya">--</span></div>
-
-<div class="link-info">
-www.bit.ly/annurmm
-</div>
-</div>
-
-<div class="right">
 <div class="jam" id="jam">00:00:00</div>
-<div class="countdown" id="countdown"></div>
 
-<div class="qris-box">
-<img src="qris.png" class="qris-img">
-</div>
-</div>
-
+<div class="tanggal">
+<div id="tanggal"></div>
+<div class="hijriyah" id="hijriyah"></div>
 </div>
 
-<div class="running">
-<div class="track">
-🕌 Masjid An Nur Menara Mandiri Jakarta • Luruskan dan rapatkan shaf • Matikan HP saat shalat • Salurkan Infaq & Shodaqoh melalui QRIS atau Rekening Bank Mandiri 1020030005000 • Jamaah dapat mengakses langsung dari HP masing2 jadwal shalat online melalui Website www.bit.ly/annurmm • DKM Masjid An Nur Menara Mandiri
+<div class="jadwal">
+<h2>JADWAL SHALAT</h2>
+
+<div class="row">
+<span>SUBUH</span>
+<span id="subuh">04:30</span>
 </div>
+
+<div class="row">
+<span>DZUHUR</span>
+<span id="dzuhur">11:55</span>
+</div>
+
+<div class="row">
+<span>ASHAR</span>
+<span id="ashar">15:15</span>
+</div>
+
+<div class="row">
+<span>MAGHRIB</span>
+<span id="maghrib">17:50</span>
+</div>
+
+<div class="row">
+<span>ISYA</span>
+<span id="isya">19:00</span>
+</div>
+
+</div>
+</div>
+
+<!-- RIGHT -->
+<div class="right">
+<div class="live-label">LIVE</div>
+
+<div class="live-box">
+<iframe
+src="https://www.youtube.com/embed/live_stream?channel=UCosQ0uvX0jSVV5nWa4xk2rA&autoplay=1&mute=0"
+allowfullscreen>
+</iframe>
+</div>
+</div>
+
+</div>
+
+<!-- RUNNING TEXT -->
+<div class="marquee">
+<span>
+Selamat datang di Masjid Jami Annur • Mohon menonaktifkan suara HP saat berada di dalam masjid • Semoga Allah menerima amal ibadah kita semua
+</span>
 </div>
 
 <script>
 
-/* ================= AMBIL ELEMENT ================= */
-const tanggal = document.getElementById("tanggal");
-const hijriyah = document.getElementById("hijriyah");
-const jam = document.getElementById("jam");
-const countdown = document.getElementById("countdown");
-const overlay = document.getElementById("overlay");
-
-const Imsak = document.getElementById("Imsak");
-const Subuh = document.getElementById("Subuh");
-const Dzuhur = document.getElementById("Dzuhur");
-const Ashar = document.getElementById("Ashar");
-const Maghrib = document.getElementById("Maghrib");
-const Isya = document.getElementById("Isya");
-
-/* ================= TANGGAL ================= */
-tanggal.textContent=new Date().toLocaleDateString(
-'id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'}
-);
-
-/* ================= API KEMENAG FULL ONLINE ================= */
-async function ambilJadwal(){
-try{
-const d=new Date();
-const tahun=d.getFullYear();
-const bulan=String(d.getMonth()+1).padStart(2,'0');
-const tanggalNow=String(d.getDate()).padStart(2,'0');
-
-/* 1301 = Jakarta */
-const kota="1301";
-
-const res=await fetch(`https://api.myquran.com/v2/sholat/jadwal/${kota}/${tahun}/${bulan}/${tanggalNow}`);
-const json=await res.json();
-const t=json.data.jadwal;
-
-Imsak.textContent=t.imsak;
-Subuh.textContent=t.subuh;
-Dzuhur.textContent=t.dzuhur;
-Ashar.textContent=t.ashar;
-Maghrib.textContent=t.maghrib;
-Isya.textContent=t.isya;
-
-hijriyah.textContent=t.tanggal_hijriyah || "-";
-
-}catch{
-hijriyah.textContent="-";
-}
-}
-
-ambilJadwal();
-
-/* reload total tiap 1 jam */
-setInterval(()=>{
-location.reload();
-},3600000);
-
-/* ================= JAM ================= */
+/* ===== JAM DIGITAL ===== */
 function updateJam(){
-const n=new Date();
-jam.textContent=
-String(n.getHours()).padStart(2,'0')+":"+
-String(n.getMinutes()).padStart(2,'0')+":"+
-String(n.getSeconds()).padStart(2,'0');
+const now = new Date();
+
+const jam = String(now.getHours()).padStart(2,'0');
+const menit = String(now.getMinutes()).padStart(2,'0');
+const detik = String(now.getSeconds()).padStart(2,'0');
+
+const hari = [
+"Minggu",
+"Senin",
+"Selasa",
+"Rabu",
+"Kamis",
+"Jumat",
+"Sabtu"
+];
+
+const bulan = [
+"Januari",
+"Februari",
+"Maret",
+"April",
+"Mei",
+"Juni",
+"Juli",
+"Agustus",
+"September",
+"Oktober",
+"November",
+"Desember"
+];
+
+const tanggal = hari[now.getDay()] + ", " +
+now.getDate() + " " +
+bulan[now.getMonth()] + " " +
+now.getFullYear();
+
+const hijri = new Intl.DateTimeFormat('id-TN-u-ca-islamic', {
+day:'numeric',
+month:'long',
+year:'numeric'
+}).format(now);
+
+
+document.getElementById('jam').innerHTML = jam + ':' + menit + ':' + detik;
+document.getElementById('tanggal').innerHTML = tanggal;
+document.getElementById('hijriyah').innerHTML = hijri + ' H';
 }
-updateJam();
+
 setInterval(updateJam,1000);
+updateJam();
 
-/* ================= HIGHLIGHT ================= */
-function highlightShalat(){
-const now=new Date();
-const waktu=["Subuh","Dzuhur","Ashar","Maghrib","Isya"];
-waktu.forEach(w=>document.getElementById(w).parentElement.classList.remove("highlight"));
-for(let w of waktu){
-let val=document.getElementById(w).innerText;
-if(!val.includes(":")) continue;
-let [j,m]=val.split(":");
-let target=new Date();
-target.setHours(j,m,0,0);
-let diff=(target-now)/1000;
-if(diff>0 && diff<=7200){
-document.getElementById(w).parentElement.classList.add("highlight");
-break;
+/* ===== FULLSCREEN OTOMATIS ===== */
+function autoFullscreen(){
+const el = document.documentElement;
+
+if(el.requestFullscreen){
+el.requestFullscreen();
 }
+else if(el.webkitRequestFullscreen){
+el.webkitRequestFullscreen();
 }
-}
-setInterval(highlightShalat,1000);
-
-/* ================= AZAN + JUMAT ================= */
-const durasiAzan=240;
-const durasiIqomah=600;
-const durasiJumat=240;
-
-function kontrolShalat(){
-if(!Subuh.innerText.includes(":")) return;
-
-const now=new Date();
-const hari=now.getDay();
-const waktu=["Subuh","Dzuhur","Ashar","Maghrib","Isya"];
-
-for(let w of waktu){
-let val=document.getElementById(w).innerText;
-if(!val.includes(":"))continue;
-
-let [j,m]=val.split(":");
-let target=new Date();
-target.setHours(j,m,0,0);
-let selisih=(now-target)/1000;
-
-if(hari===5 && w==="Dzuhur"){
-if(selisih>=0 && selisih<durasiJumat){
-overlay.style.display="flex";
-overlay.innerHTML=
-`<div style="font-size:70px;">AZAN SHALAT JUMAT</div>
-<div style="font-size:160px;margin-top:20px;">${val}</div>`;
-return;
+else if(el.msRequestFullscreen){
+el.msRequestFullscreen();
 }
 }
 
-if(selisih>=0 && selisih<durasiAzan){
-overlay.style.display="flex";
-overlay.innerHTML=
-`<div style="font-size:60px;">AZAN WAKTU SHALAT ${w.toUpperCase()}</div>
-<div style="font-size:150px;margin-top:20px;">${val}</div>`;
-return;
-}
+setTimeout(autoFullscreen,2000);
 
-if(!(hari===5 && w==="Dzuhur")){
-if(selisih>=durasiAzan && selisih<(durasiAzan+durasiIqomah)){
-let sisa=(durasiAzan+durasiIqomah)-selisih;
-let mm=Math.floor(sisa/60);
-let ss=Math.floor(sisa%60);
-overlay.style.display="flex";
-overlay.innerHTML=
-`<div style="font-size:80px;">IQOMAH ${w.toUpperCase()}</div>
-<div style="font-size:180px;color:red;font-weight:bold;">
-${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}
-</div>`;
-return;
+/* ===== AMBIL JADWAL SHALAT API ===== */
+async function loadJadwal(){
+try{
+const response = await fetch('https://api.aladhan.com/v1/timingsByCity?city=Bandung&country=Indonesia&method=11');
+const data = await response.json();
+
+const jadwal = data.data.timings;
+
+
+document.getElementById('subuh').innerHTML = jadwal.Fajr;
+document.getElementById('dzuhur').innerHTML = jadwal.Dhuhr;
+document.getElementById('ashar').innerHTML = jadwal.Asr;
+document.getElementById('maghrib').innerHTML = jadwal.Maghrib;
+document.getElementById('isya').innerHTML = jadwal.Isha;
 }
+catch(err){
+console.log(err);
 }
 }
 
-overlay.style.display="none";
-}
-setInterval(kontrolShalat,1000);
+loadJadwal();
 
-/* ================= COUNTDOWN ================= */
-function updateCountdown(){
-if(overlay.style.display==="flex"){countdown.textContent="";return;}
-const now=new Date();
-const waktu=["Subuh","Dzuhur","Ashar","Maghrib","Isya"];
-let next=null,name="";
-for(let w of waktu){
-let val=document.getElementById(w).innerText;
-if(!val.includes(":"))continue;
-let [j,m]=val.split(":");
-let target=new Date();
-target.setHours(j,m,0,0);
-if(target>now){next=target;name=w;break;}
-}
-if(!next){
-let val=document.getElementById("Subuh").innerText;
-let [j,m]=val.split(":");
-next=new Date();
-next.setDate(now.getDate()+1);
-next.setHours(j,m,0,0);
-name="Subuh";
-}
-let diff=(next-now)/1000;
-if(diff<=3600 && diff>0){
-let hh=Math.floor(diff/3600);
-let mm=Math.floor((diff%3600)/60);
-let ss=Math.floor(diff%60);
-countdown.textContent="Menuju "+name+" : "+
-String(hh).padStart(2,'0')+":"+
-String(mm).padStart(2,'0')+":"+
-String(ss).padStart(2,'0');
-}else{countdown.textContent="";}
-}
-setInterval(updateCountdown,1000);
-
-/* ================= AUTO RELOAD ================= */
-setInterval(()=>{
-let n=new Date();
-if(n.getHours()==0 && n.getMinutes()==0){location.reload();}
-},60000);
-
-</script>
-
-<script>
-document.body.addEventListener("click",()=>{
-if(!document.fullscreenElement){
-document.documentElement.requestFullscreen();
-}
-});
 </script>
 
 </body>
 </html>
+```
+
+---
+
+# Cara Pakai
+
+1. Buat file:
+
+```text
+index.html
+```
+
+2. Upload ke:
+
+* GitHub Pages
+* Netlify
+* Vercel
+* Firebase Hosting
+
+3. Buka di browser Android TV.
+
+4. Untuk fullscreen otomatis Android TV:
+
+* Gunakan browser Fully Kiosk Browser atau TV Bro.
+* Aktifkan Auto Fullscreen.
+
+---
+
+# Mengganti Live Streaming
+
+Ganti bagian:
+
+```html
+channel=UCosQ0uvX0jSVV5nWa4xk2rA
+```
+
+Dengan ID channel YouTube live milik sendiri.
+
+---
+
+# Tambahan yang Bisa Ditambahkan
+
+* Adzan otomatis
+* Iqomah countdown
+* Slide pengumuman
+* Jadwal kajian
+* CCTV masjid
+* Cuaca realtime
+* Logo masjid
+* Running text dari Google Sheet
+* Background Ka'bah bergerak
+* Mode khusus Ramadhan
