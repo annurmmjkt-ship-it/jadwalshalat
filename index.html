@@ -6,6 +6,7 @@
 
 <title>MASJID DIGITAL LIVE QURAN TV</title>
 
+<!-- HLS PLAYER -->
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
 <style>
@@ -24,7 +25,7 @@ height:100vh;
 color:white;
 }
 
-/* BACKGROUND */
+/* ================= BACKGROUND ================= */
 
 .bg{
 position:fixed;
@@ -33,14 +34,14 @@ left:0;
 width:100%;
 height:100%;
 background:
-linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.85)),
+linear-gradient(rgba(0,0,0,0.72),rgba(0,0,0,0.88)),
 url('https://images.unsplash.com/photo-1542816417-0983670d4e3f?q=80&w=1920');
 background-size:cover;
 background-position:center;
 z-index:-2;
 }
 
-/* HEADER */
+/* ================= HEADER ================= */
 
 .header{
 height:110px;
@@ -50,7 +51,10 @@ align-items:center;
 padding:15px 35px;
 background:rgba(0,0,0,0.45);
 border-bottom:2px solid rgba(255,215,0,0.25);
+backdrop-filter:blur(10px);
 }
+
+/* ================= LOGO ================= */
 
 .logo-area{
 display:flex;
@@ -62,29 +66,35 @@ gap:18px;
 width:65px;
 height:65px;
 border-radius:50%;
-background:gold;
+background:linear-gradient(135deg,#ffd700,#ffb300);
 display:flex;
 align-items:center;
 justify-content:center;
 font-size:28px;
 font-weight:bold;
 color:black;
+box-shadow:0 0 20px rgba(255,215,0,0.4);
 }
 
 .title h1{
 font-size:44px;
 color:#ffd700;
+font-weight:bold;
 }
 
 .title p{
 font-size:20px;
 color:#ddd;
+margin-top:4px;
 }
 
+/* ================= DATE ================= */
+
 .date-box{
-padding:15px 22px;
+padding:14px 22px;
 border-radius:18px;
 background:rgba(255,255,255,0.05);
+border:1px solid rgba(255,215,0,0.2);
 text-align:right;
 }
 
@@ -92,13 +102,14 @@ text-align:right;
 font-size:26px;
 font-weight:bold;
 color:#ffd700;
+margin-bottom:4px;
 }
 
 .masehi{
 font-size:20px;
 }
 
-/* MAIN */
+/* ================= MAIN ================= */
 
 .main{
 display:grid;
@@ -108,13 +119,17 @@ padding:20px;
 height:calc(100vh - 160px);
 }
 
-/* LEFT */
+/* ================= LEFT PANEL ================= */
 
 .left{
 background:rgba(0,0,0,0.45);
 border-radius:28px;
 padding:25px;
+backdrop-filter:blur(10px);
+border:1px solid rgba(255,255,255,0.08);
 }
+
+/* ================= CLOCK ================= */
 
 .clock{
 font-size:90px;
@@ -122,10 +137,13 @@ font-weight:bold;
 text-align:center;
 color:#00ffe0;
 margin-bottom:25px;
+text-shadow:0 0 18px rgba(0,255,224,0.35);
 }
 
+/* ================= NEXT SHALAT ================= */
+
 .next-box{
-background:gold;
+background:linear-gradient(135deg,#ffd700,#ffb300);
 padding:20px;
 border-radius:22px;
 text-align:center;
@@ -140,7 +158,10 @@ font-size:24px;
 .next-box p{
 font-size:40px;
 font-weight:bold;
+margin-top:6px;
 }
+
+/* ================= TABLE ================= */
 
 .table-title{
 text-align:center;
@@ -153,6 +174,7 @@ margin-bottom:18px;
 .prayer{
 display:flex;
 justify-content:space-between;
+align-items:center;
 padding:18px 22px;
 margin-bottom:12px;
 border-radius:18px;
@@ -161,19 +183,26 @@ background:rgba(255,255,255,0.08);
 }
 
 .prayer.active{
-background:gold;
+background:linear-gradient(135deg,#ffd700,#ffb300);
 color:black;
 font-weight:bold;
 }
 
-/* RIGHT */
+.prayer-name{
+font-weight:bold;
+}
+
+/* ================= RIGHT PANEL ================= */
 
 .right{
 position:relative;
 border-radius:28px;
 overflow:hidden;
 background:black;
+border:1px solid rgba(255,255,255,0.08);
 }
+
+/* ================= LIVE LABEL ================= */
 
 .live{
 position:absolute;
@@ -185,16 +214,25 @@ border-radius:14px;
 font-size:24px;
 font-weight:bold;
 z-index:10;
+animation:blink 1s infinite;
 }
+
+@keyframes blink{
+50%{
+opacity:0.4;
+}
+}
+
+/* ================= VIDEO ================= */
 
 #video{
 width:100%;
 height:100%;
-object-fit:cover;
+object-fit:contain;
 background:black;
 }
 
-/* FOOTER */
+/* ================= FOOTER ================= */
 
 .footer{
 position:fixed;
@@ -212,7 +250,7 @@ align-items:center;
 white-space:nowrap;
 display:inline-block;
 padding-left:100%;
-animation:jalan 28s linear infinite;
+animation:jalan 30s linear infinite;
 font-size:26px;
 font-weight:bold;
 color:black;
@@ -227,6 +265,30 @@ transform:translateX(-100%);
 }
 }
 
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:1200px){
+
+body{
+overflow:auto;
+height:auto;
+}
+
+.main{
+grid-template-columns:1fr;
+height:auto;
+}
+
+.clock{
+font-size:70px;
+}
+
+.right{
+height:500px;
+}
+
+}
+
 </style>
 </head>
 
@@ -234,7 +296,7 @@ transform:translateX(-100%);
 
 <div class="bg"></div>
 
-<!-- HEADER -->
+<!-- ================= HEADER ================= -->
 
 <div class="header">
 
@@ -254,17 +316,18 @@ transform:translateX(-100%);
 <div class="date-box">
 
 <div class="hijri" id="hijri"></div>
+
 <div class="masehi" id="masehi"></div>
 
 </div>
 
 </div>
 
-<!-- MAIN -->
+<!-- ================= MAIN ================= -->
 
 <div class="main">
 
-<!-- LEFT -->
+<!-- ================= LEFT ================= -->
 
 <div class="left">
 
@@ -274,7 +337,9 @@ transform:translateX(-100%);
 
 <div class="next-box">
 <h2>SHALAT BERIKUTNYA</h2>
-<p>MAGHRIB • 17:48</p>
+<p id="nextPrayer">
+MAGHRIB • 17:48
+</p>
 </div>
 
 <div class="table-title">
@@ -282,33 +347,33 @@ JADWAL SHALAT
 </div>
 
 <div class="prayer">
-<span>SUBUH</span>
-<span>04:31</span>
+<div class="prayer-name">SUBUH</div>
+<div id="subuh">04:31</div>
 </div>
 
 <div class="prayer">
-<span>DZUHUR</span>
-<span>11:46</span>
+<div class="prayer-name">DZUHUR</div>
+<div id="dzuhur">11:46</div>
 </div>
 
 <div class="prayer active">
-<span>ASHAR</span>
-<span>15:09</span>
+<div class="prayer-name">ASHAR</div>
+<div id="ashar">15:09</div>
 </div>
 
 <div class="prayer">
-<span>MAGHRIB</span>
-<span>17:30</span>
+<div class="prayer-name">MAGHRIB</div>
+<div id="maghrib">17:30</div>
 </div>
 
 <div class="prayer">
-<span>ISYA</span>
-<span>18:47</span>
+<div class="prayer-name">ISYA</div>
+<div id="isya">18:47</div>
 </div>
 
 </div>
 
-<!-- RIGHT -->
+<!-- ================= RIGHT ================= -->
 
 <div class="right">
 
@@ -316,25 +381,35 @@ JADWAL SHALAT
 LIVE QURAN TV
 </div>
 
-<video id="video" autoplay muted controls></video>
+<video
+id="video"
+autoplay
+muted
+playsinline
+controls>
+</video>
 
 </div>
 
 </div>
 
-<!-- FOOTER -->
+<!-- ================= FOOTER ================= -->
 
 <div class="footer">
 
 <div class="marquee">
-Selamat datang di Masjid Jami Annur • Mohon menonaktifkan suara HP saat berada di dalam masjid • Semoga Allah menerima amal ibadah kita semua
+
+Selamat datang di Masjid Jami Annur • Mohon menonaktifkan suara HP saat berada di dalam masjid • Semoga Allah menerima amal ibadah kita semua • Jadwal kajian rutin setiap malam Jumat ba'da Isya
+
 </div>
 
 </div>
+
+<!-- ================= SCRIPT ================= -->
 
 <script>
 
-/* JAM */
+/* ================= JAM ================= */
 
 function updateClock(){
 
@@ -343,13 +418,20 @@ const now = new Date();
 document.getElementById('clock').innerHTML =
 now.toLocaleTimeString('id-ID');
 
+/* ================= TANGGAL ================= */
+
 document.getElementById('masehi').innerHTML =
-now.toLocaleDateString('id-ID',{
+now.toLocaleDateString(
+'id-ID',
+{
 weekday:'long',
 day:'numeric',
 month:'long',
 year:'numeric'
-});
+}
+);
+
+/* ================= HIJRI ================= */
 
 const hijri =
 new Intl.DateTimeFormat(
@@ -370,31 +452,102 @@ setInterval(updateClock,1000);
 
 updateClock();
 
-/* FULLSCREEN */
+/* ================= AUTO FULLSCREEN ================= */
 
-setTimeout(()=>{
-if(document.documentElement.requestFullscreen){
-document.documentElement.requestFullscreen();
+function autoFullscreen(){
+
+const el = document.documentElement;
+
+if(el.requestFullscreen){
+el.requestFullscreen();
 }
-},2000);
 
-/* LIVE STREAM QURAN TV */
+}
+
+setTimeout(autoFullscreen,2000);
+
+/* ================= JADWAL SHALAT ================= */
+
+async function loadPrayer(){
+
+try{
+
+const response = await fetch(
+'https://api.aladhan.com/v1/timingsByCity?city=Bandung&country=Indonesia&method=11'
+);
+
+const data = await response.json();
+
+const t = data.data.timings;
+
+document.getElementById('subuh').innerHTML = t.Fajr;
+document.getElementById('dzuhur').innerHTML = t.Dhuhr;
+document.getElementById('ashar').innerHTML = t.Asr;
+document.getElementById('maghrib').innerHTML = t.Maghrib;
+document.getElementById('isya').innerHTML = t.Isha;
+
+}
+catch(err){
+
+console.log(err);
+
+}
+
+}
+
+loadPrayer();
+
+/* ================= LIVE STREAM LOW RES ================= */
 
 const video = document.getElementById('video');
 
+/* STREAM 360P RINGAN */
+
 const videoSrc =
-'https://mn-nl.mncdn.com/saudiquran/smil:saudiquran.stream.smil/playlist.m3u8';
+'https://mn-nl.mncdn.com/saudiquran/saudiquran_360p/playlist.m3u8';
+
+/* VIDEO OPTIMIZE */
+
+video.setAttribute('playsinline', true);
+video.setAttribute('preload', 'metadata');
+video.muted = true;
+
+/* HLS PLAYER */
 
 if(Hls.isSupported()){
 
-const hls = new Hls();
+const hls = new Hls({
+
+maxBufferLength:10,
+maxMaxBufferLength:20,
+liveSyncDurationCount:3
+
+});
 
 hls.loadSource(videoSrc);
 
 hls.attachMedia(video);
 
 hls.on(Hls.Events.MANIFEST_PARSED,function(){
+
 video.play();
+
+});
+
+/* AUTO RECONNECT */
+
+hls.on(Hls.Events.ERROR,function(event,data){
+
+if(data.fatal){
+
+setTimeout(function(){
+
+hls.startLoad();
+
+},3000);
+
+}
+
 });
 
 }
@@ -403,7 +556,9 @@ else if(video.canPlayType('application/vnd.apple.mpegurl')){
 video.src = videoSrc;
 
 video.addEventListener('loadedmetadata',function(){
+
 video.play();
+
 });
 
 }
