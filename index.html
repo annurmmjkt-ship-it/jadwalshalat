@@ -4,10 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>MASJID DIGITAL LIVE QURAN TV</title>
-
-<!-- HLS PLAYER -->
-<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<title>MASJID DIGITAL TV</title>
 
 <style>
 
@@ -73,7 +70,6 @@ justify-content:center;
 font-size:28px;
 font-weight:bold;
 color:black;
-box-shadow:0 0 20px rgba(255,215,0,0.4);
 }
 
 .title h1{
@@ -225,10 +221,10 @@ opacity:0.4;
 
 /* ================= VIDEO ================= */
 
-#video{
+.video-frame{
 width:100%;
 height:100%;
-object-fit:contain;
+border:none;
 background:black;
 }
 
@@ -378,16 +374,17 @@ JADWAL SHALAT
 <div class="right">
 
 <div class="live">
-LIVE QURAN TV
+LIVE VIDEO
 </div>
 
-<video
-id="video"
-autoplay
-muted
-playsinline
-controls>
-</video>
+<iframe
+class="video-frame"
+src="https://www.youtube.com/embed/WjHPlWsBPzk?autoplay=1&mute=1&controls=0&loop=1&playlist=WjHPlWsBPzk&rel=0"
+title="YouTube video"
+frameborder="0"
+allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+allowfullscreen>
+</iframe>
 
 </div>
 
@@ -466,7 +463,7 @@ el.requestFullscreen();
 
 setTimeout(autoFullscreen,2000);
 
-/* ================= JADWAL SHALAT ================= */
+/* ================= JADWAL SHALAT API ================= */
 
 async function loadPrayer(){
 
@@ -496,72 +493,6 @@ console.log(err);
 }
 
 loadPrayer();
-
-/* ================= LIVE STREAM LOW RES ================= */
-
-const video = document.getElementById('video');
-
-/* STREAM 360P RINGAN */
-
-const videoSrc =
-'https://mn-nl.mncdn.com/saudiquran/saudiquran_360p/playlist.m3u8';
-
-/* VIDEO OPTIMIZE */
-
-video.setAttribute('playsinline', true);
-video.setAttribute('preload', 'metadata');
-video.muted = true;
-
-/* HLS PLAYER */
-
-if(Hls.isSupported()){
-
-const hls = new Hls({
-
-maxBufferLength:10,
-maxMaxBufferLength:20,
-liveSyncDurationCount:3
-
-});
-
-hls.loadSource(videoSrc);
-
-hls.attachMedia(video);
-
-hls.on(Hls.Events.MANIFEST_PARSED,function(){
-
-video.play();
-
-});
-
-/* AUTO RECONNECT */
-
-hls.on(Hls.Events.ERROR,function(event,data){
-
-if(data.fatal){
-
-setTimeout(function(){
-
-hls.startLoad();
-
-},3000);
-
-}
-
-});
-
-}
-else if(video.canPlayType('application/vnd.apple.mpegurl')){
-
-video.src = videoSrc;
-
-video.addEventListener('loadedmetadata',function(){
-
-video.play();
-
-});
-
-}
 
 </script>
 
