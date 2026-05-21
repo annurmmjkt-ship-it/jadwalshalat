@@ -178,12 +178,6 @@ font-size:30px;
 background:rgba(255,255,255,0.08);
 }
 
-.prayer.active{
-background:linear-gradient(135deg,#ffd700,#ffb300);
-color:black;
-font-weight:bold;
-}
-
 .prayer-name{
 font-weight:bold;
 }
@@ -198,7 +192,7 @@ background:black;
 border:1px solid rgba(255,255,255,0.08);
 }
 
-/* ================= LABEL VIDEO ================= */
+/* ================= VIDEO ================= */
 
 .live{
 position:absolute;
@@ -218,8 +212,6 @@ animation:blink 1s infinite;
 opacity:0.4;
 }
 }
-
-/* ================= VIDEO ================= */
 
 .video-frame{
 width:100%;
@@ -262,26 +254,100 @@ transform:translateX(-100%);
 }
 }
 
-/* ================= RESPONSIVE ================= */
+/* ================= MODE HP ================= */
 
-@media(max-width:1200px){
+@media(max-width:768px){
 
 body{
 overflow:auto;
 height:auto;
 }
 
+.header{
+height:auto;
+padding:15px;
+flex-direction:column;
+gap:15px;
+text-align:center;
+}
+
+.logo-area{
+flex-direction:column;
+}
+
+.title h1{
+font-size:28px;
+}
+
+.title p{
+font-size:16px;
+}
+
+.date-box{
+width:100%;
+text-align:center;
+}
+
+.hijri{
+font-size:20px;
+}
+
+.masehi{
+font-size:16px;
+}
+
 .main{
 grid-template-columns:1fr;
+padding:12px;
 height:auto;
 }
 
-.clock{
-font-size:70px;
-}
+/* HIDE VIDEO */
 
 .right{
-height:500px;
+display:none;
+}
+
+.left{
+padding:18px;
+border-radius:20px;
+}
+
+.clock{
+font-size:52px;
+margin-bottom:18px;
+}
+
+.next-box{
+padding:16px;
+border-radius:18px;
+}
+
+.next-box h2{
+font-size:18px;
+}
+
+.next-box p{
+font-size:28px;
+}
+
+.table-title{
+font-size:26px;
+}
+
+.prayer{
+font-size:22px;
+padding:14px 16px;
+border-radius:14px;
+}
+
+.footer{
+height:42px;
+}
+
+.marquee{
+font-size:18px;
+animation:jalan 18s linear infinite;
 }
 
 }
@@ -332,11 +398,14 @@ height:500px;
 00:00:00
 </div>
 
-<div class="next-box">
+<div class="next-box" id="nextBox">
+
 <h2>SHALAT BERIKUTNYA</h2>
+
 <p id="nextPrayer">
 Memuat...
 </p>
+
 </div>
 
 <div class="table-title">
@@ -422,8 +491,6 @@ const now = new Date();
 document.getElementById('clock').innerHTML =
 now.toLocaleTimeString('id-ID');
 
-/* ================= TANGGAL ================= */
-
 document.getElementById('masehi').innerHTML =
 now.toLocaleDateString(
 'id-ID',
@@ -434,8 +501,6 @@ month:'long',
 year:'numeric'
 }
 );
-
-/* ================= HIJRI ================= */
 
 const hijri =
 new Intl.DateTimeFormat(
@@ -460,6 +525,8 @@ updateClock();
 
 function autoFullscreen(){
 
+if(window.innerWidth > 768){
+
 const el = document.documentElement;
 
 if(el.requestFullscreen){
@@ -468,9 +535,11 @@ el.requestFullscreen();
 
 }
 
+}
+
 setTimeout(autoFullscreen,2000);
 
-/* ================= VIDEO AUTOPLAY ================= */
+/* ================= VIDEO ================= */
 
 const video = document.getElementById('video');
 
@@ -478,34 +547,84 @@ video.muted = true;
 
 video.play().catch(function(error){
 
-console.log("Autoplay diblok:", error);
+console.log(error);
 
 });
 
-/* ================= JADWAL SHALAT KEMENAG ================= */
+/* ================= MODE ================= */
+
+let modeAzan = false;
+let modeIqomah = false;
+
+let azanEndTime = null;
+let iqomahEndTime = null;
+
+let jadwalGlobal = null;
+
+window.currentPrayerName = '';
+
+/* ================= LOAD JADWAL ================= */
 
 async function loadPrayer(){
 
 try{
 
-const response = await fetch(
-'https://api.myquran.com/v2/sholat/jadwal/1301/' +
-new Date().getFullYear() + '/' +
-(String(new Date().getMonth()+1).padStart(2,'0')) + '/' +
-(String(new Date().getDate()).padStart(2,'0'))
-);
+const now = new Date();
+
+const tahun = now.getFullYear();
+
+const bulan = String(now.getMonth()+1).padStart(2,'0');
+
+const tanggal = String(now.getDate()).padStart(2,'0');
+
+/* 1301 = DKI Jakarta */
+
+const url =
+`https://api.myquran.com/v2/sholat/jadwal/1301/${tahun}/${bulan}/${tanggal}`;
+
+const response = await fetch(url);
 
 const result = await response.json();
 
 const jadwal = result.data.jadwal;
 
-document.getElementById('subuh').innerHTML = jadwal.subuh;
-document.getElementById('dzuhur').innerHTML = jadwal.dzuhur;
-document.getElementById('ashar').innerHTML = jadwal.ashar;
-document.getElementById('maghrib').innerHTML = jadwal.maghrib;
-document.getElementById('isya').innerHTML = jadwal.isya;
+jadwalGlobal = jadwal;
+
+/* ================= TAMPILKAN ================= */
+
+document.getElementById('subuh').innerHTML =
+jadwal.subuh;
+
+document.getElementById('dzuhur').innerHTML =
+jadwal.dzuhur;
+
+document.getElementById('ashar').innerHTML =
+jadwal.ashar;
+
+document.getElementById('maghrib').innerHTML =
+jadwal.maghrib;
+
+document.getElementById('isya').innerHTML =
+jadwal.isya;
+
+updateNextPrayer();
+
+}
+catch(error){
+
+console.log(error);
+
+}
+
+}
+
+loadPrayer();
 
 /* ================= NEXT SHALAT ================= */
+
+function updateNextPrayer(){
+
+if(!jadwalGlobal) return;
 
 const now = new Date();
 
@@ -516,27 +635,27 @@ const prayerTimes = [
 
 {
 name:'SUBUH',
-time:jadwal.subuh
+time:jadwalGlobal.subuh
 },
 
 {
 name:'DZUHUR',
-time:jadwal.dzuhur
+time:jadwalGlobal.dzuhur
 },
 
 {
 name:'ASHAR',
-time:jadwal.ashar
+time:jadwalGlobal.ashar
 },
 
 {
 name:'MAGHRIB',
-time:jadwal.maghrib
+time:jadwalGlobal.maghrib
 },
 
 {
 name:'ISYA',
-time:jadwal.isya
+time:jadwalGlobal.isya
 }
 
 ];
@@ -545,7 +664,8 @@ let nextPrayer = prayerTimes[0];
 
 for(let i=0;i<prayerTimes.length;i++){
 
-const parts = prayerTimes[i].time.split(':');
+const parts =
+prayerTimes[i].time.split(':');
 
 const minutes =
 parseInt(parts[0])*60 +
@@ -561,19 +681,239 @@ break;
 
 }
 
-document.getElementById('nextPrayer').innerHTML =
-nextPrayer.name + ' • ' + nextPrayer.time;
+document.getElementById('nextBox').innerHTML =
+
+`
+<h2>SHALAT BERIKUTNYA</h2>
+
+<p id="nextPrayer">
+${nextPrayer.name} • ${nextPrayer.time}
+</p>
+`;
 
 }
-catch(error){
 
-console.log(error);
+/* ================= CEK WAKTU SHALAT ================= */
+
+function checkPrayerTime(){
+
+if(!jadwalGlobal) return;
+
+const now = new Date();
+
+const current =
+String(now.getHours()).padStart(2,'0') +
+':' +
+String(now.getMinutes()).padStart(2,'0');
+
+const prayerList = [
+
+{
+name:'SUBUH',
+time:jadwalGlobal.subuh
+},
+
+{
+name:'DZUHUR',
+time:jadwalGlobal.dzuhur
+},
+
+{
+name:'ASHAR',
+time:jadwalGlobal.ashar
+},
+
+{
+name:'MAGHRIB',
+time:jadwalGlobal.maghrib
+},
+
+{
+name:'ISYA',
+time:jadwalGlobal.isya
+}
+
+];
+
+for(let i=0;i<prayerList.length;i++){
+
+if(current === prayerList[i].time &&
+!modeAzan &&
+!modeIqomah){
+
+startAzan(prayerList[i].name);
 
 }
 
 }
 
-loadPrayer();
+}
+
+/* ================= START AZAN ================= */
+
+function startAzan(prayerName){
+
+modeAzan = true;
+
+window.currentPrayerName = prayerName;
+
+const now = new Date();
+
+/* 4 MENIT */
+
+azanEndTime =
+new Date(now.getTime() + (4 * 60 * 1000));
+
+document.getElementById('nextBox').innerHTML =
+
+`
+<h2>SAAT INI</h2>
+
+<p style="font-size:52px">
+AZAN ${prayerName}
+</p>
+`;
+
+}
+
+/* ================= START IQOMAH ================= */
+
+function startIqomah(){
+
+const now = new Date();
+
+const isFriday = now.getDay() === 5;
+
+/* ================= KHUSUS JUMAT DZUHUR ================= */
+
+if(
+isFriday &&
+window.currentPrayerName === 'DZUHUR'
+){
+
+modeAzan = false;
+modeIqomah = false;
+
+updateNextPrayer();
+
+return;
+
+}
+
+/* ================= NORMAL ================= */
+
+modeAzan = false;
+
+modeIqomah = true;
+
+/* 10 MENIT */
+
+iqomahEndTime =
+new Date(now.getTime() + (10 * 60 * 1000));
+
+}
+
+/* ================= UPDATE TIMER ================= */
+
+function updateIqomahTimer(){
+
+const now = new Date();
+
+/* ================= MODE AZAN ================= */
+
+if(modeAzan){
+
+const diff =
+azanEndTime - now;
+
+if(diff <= 0){
+
+startIqomah();
+
+return;
+
+}
+
+const menit =
+Math.floor(diff / 1000 / 60);
+
+const detik =
+Math.floor((diff / 1000) % 60);
+
+document.getElementById('nextBox').innerHTML =
+
+`
+<h2>AZAN BERLANGSUNG</h2>
+
+<p style="font-size:58px">
+${String(menit).padStart(2,'0')}:
+${String(detik).padStart(2,'0')}
+</p>
+`;
+
+}
+
+/* ================= MODE IQOMAH ================= */
+
+if(modeIqomah){
+
+const diff =
+iqomahEndTime - now;
+
+if(diff <= 0){
+
+modeIqomah = false;
+
+document.getElementById('nextBox').innerHTML =
+
+`
+<h2>IQOMAH</h2>
+
+<p style="font-size:52px">
+SHALAT DIMULAI
+</p>
+`;
+
+setTimeout(function(){
+
+location.reload();
+
+},15000);
+
+return;
+
+}
+
+const menit =
+Math.floor(diff / 1000 / 60);
+
+const detik =
+Math.floor((diff / 1000) % 60);
+
+document.getElementById('nextBox').innerHTML =
+
+`
+<h2>MENUJU IQOMAH</h2>
+
+<p style="font-size:58px">
+${String(menit).padStart(2,'0')}:
+${String(detik).padStart(2,'0')}
+</p>
+`;
+
+}
+
+}
+
+/* ================= LOOP ================= */
+
+setInterval(function(){
+
+checkPrayerTime();
+
+updateIqomahTimer();
+
+},1000);
 
 </script>
 
