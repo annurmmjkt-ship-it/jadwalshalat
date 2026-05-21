@@ -95,16 +95,15 @@ text-align:right;
 }
 
 .masehi{
-font-size:26px;
+font-size:24px;
 font-weight:bold;
 color:#ffd700;
-margin-bottom:4px;
+margin-bottom:6px;
 }
 
 .hijri{
-font-size:0px;
-color:#ddd;
-margin-bottom:6px;
+font-size:20px;
+color:#fff;
 }
 
 /* ================= MAIN ================= */
@@ -114,10 +113,11 @@ display:grid;
 grid-template-columns:34% 66%;
 gap:20px;
 padding:20px;
-height:calc(100vh - 160px);
+padding-bottom:70px;
+height:calc(100vh - 110px);
 }
 
-/* ================= LEFT PANEL ================= */
+/* ================= LEFT ================= */
 
 .left{
 background:rgba(0,0,0,0.45);
@@ -155,9 +155,14 @@ font-size:24px;
 }
 
 .next-box p{
-font-size:40px;
+font-size:34px;
 font-weight:bold;
 margin-top:6px;
+}
+
+.countdown{
+font-size:22px;
+margin-top:10px;
 }
 
 /* ================= TABLE ================= */
@@ -179,9 +184,12 @@ margin-bottom:12px;
 border-radius:18px;
 font-size:30px;
 background:rgba(255,255,255,0.08);
+transition:0.3s;
 }
 
-.prayer-name{
+.active-prayer{
+background:linear-gradient(135deg,#00e5ff,#00bcd4);
+color:black;
 font-weight:bold;
 }
 
@@ -201,7 +209,7 @@ display:block;
 border-radius:16px;
 }
 
-/* ================= RIGHT PANEL ================= */
+/* ================= RIGHT ================= */
 
 .right{
 position:relative;
@@ -210,8 +218,6 @@ overflow:hidden;
 background:black;
 border:1px solid rgba(255,255,255,0.08);
 }
-
-/* ================= VIDEO ================= */
 
 .live{
 position:absolute;
@@ -252,6 +258,7 @@ background:#ffd700;
 overflow:hidden;
 display:flex;
 align-items:center;
+z-index:999;
 }
 
 .marquee{
@@ -273,7 +280,43 @@ transform:translateX(-100%);
 }
 }
 
-/* ================= MODE HP ================= */
+/* ================= OVERLAY ================= */
+
+.overlay{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:black;
+display:none;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+z-index:99999;
+text-align:center;
+}
+
+.overlay-title{
+font-size:90px;
+font-weight:bold;
+color:#ffd700;
+margin-bottom:30px;
+}
+
+.overlay-sub{
+font-size:50px;
+color:white;
+}
+
+.overlay-count{
+font-size:130px;
+font-weight:bold;
+color:#00ffe0;
+margin-top:30px;
+}
+
+/* ================= HP MODE ================= */
 
 @media(max-width:768px){
 
@@ -302,22 +345,10 @@ font-size:28px;
 font-size:16px;
 }
 
-.date-box{
-width:100%;
-text-align:center;
-}
-
-.masehi{
-font-size:20px;
-}
-
-.hijri{
-font-size:0px;
-}
-
 .main{
 grid-template-columns:1fr;
 padding:12px;
+padding-bottom:60px;
 height:auto;
 }
 
@@ -325,37 +356,12 @@ height:auto;
 display:none;
 }
 
-.left{
-padding:18px;
-border-radius:20px;
-}
-
 .clock{
-font-size:52px;
-margin-bottom:18px;
-}
-
-.next-box{
-padding:16px;
-border-radius:18px;
-}
-
-.next-box h2{
-font-size:18px;
-}
-
-.next-box p{
-font-size:28px;
-}
-
-.table-title{
-font-size:26px;
+font-size:56px;
 }
 
 .prayer{
 font-size:22px;
-padding:14px 16px;
-border-radius:14px;
 }
 
 .footer{
@@ -364,12 +370,18 @@ height:42px;
 
 .marquee{
 font-size:18px;
-animation:jalan 40s linear infinite;
 }
 
-.qris-box{
-margin-top:16px;
-border-radius:18px;
+.overlay-title{
+font-size:42px;
+}
+
+.overlay-sub{
+font-size:24px;
+}
+
+.overlay-count{
+font-size:70px;
 }
 
 }
@@ -399,11 +411,8 @@ border-radius:18px;
 </div>
 
 <div class="date-box">
-
-<div class="hijri" id="hijri"></div>
-
 <div class="masehi" id="masehi"></div>
-
+<div class="hijri" id="hijri"></div>
 </div>
 
 </div>
@@ -420,7 +429,7 @@ border-radius:18px;
 00:00:00
 </div>
 
-<div class="next-box" id="nextBox">
+<div class="next-box">
 
 <h2>SHALAT BERIKUTNYA</h2>
 
@@ -428,34 +437,38 @@ border-radius:18px;
 Memuat...
 </p>
 
+<div class="countdown" id="countdown">
+--:--
+</div>
+
 </div>
 
 <div class="table-title">
 JADWAL SHALAT
 </div>
 
-<div class="prayer">
-<div class="prayer-name">SUBUH</div>
+<div class="prayer" id="box-subuh">
+<div>SUBUH</div>
 <div id="subuh">--:--</div>
 </div>
 
-<div class="prayer">
-<div class="prayer-name">DZUHUR</div>
+<div class="prayer" id="box-dzuhur">
+<div>DZUHUR</div>
 <div id="dzuhur">--:--</div>
 </div>
 
-<div class="prayer">
-<div class="prayer-name">ASHAR</div>
+<div class="prayer" id="box-ashar">
+<div>ASHAR</div>
 <div id="ashar">--:--</div>
 </div>
 
-<div class="prayer">
-<div class="prayer-name">MAGHRIB</div>
+<div class="prayer" id="box-maghrib">
+<div>MAGHRIB</div>
 <div id="maghrib">--:--</div>
 </div>
 
-<div class="prayer">
-<div class="prayer-name">ISYA</div>
+<div class="prayer" id="box-isya">
+<div>ISYA</div>
 <div id="isya">--:--</div>
 </div>
 
@@ -465,7 +478,6 @@ JADWAL SHALAT
 
 <img
 src="gambar-qris.jpg"
-alt="QRIS Masjid"
 class="qris-img">
 
 </div>
@@ -477,7 +489,7 @@ class="qris-img">
 <div class="right">
 
 <div class="live">
-VIDEO MASJID
+LIVE
 </div>
 
 <video
@@ -486,12 +498,9 @@ class="video-frame"
 autoplay
 muted
 loop
-playsinline
-controls>
+playsinline>
 
 <source src="gambar2.mp4" type="video/mp4">
-
-Browser tidak mendukung video.
 
 </video>
 
@@ -505,8 +514,26 @@ Browser tidak mendukung video.
 
 <div class="marquee">
 
-Selamat datang di Masjid Annur Menara Mandiri Jakarta • Jadwal shalat mengikuti data Kementerian Agama Republik Indonesia • Mohon menonaktifkan suara HP saat berada di dalam masjid • Salurkan Infaq & Shodaqoh melalui QRIS atau Rekening Bank Mandiri 1020030005000 • Jamaah dapat mengakses langsung dari HP masing-masing jadwal shalat online melalui Website www.bit.ly/annurmm • DKM Masjid An Nur Menara Mandiri • Semoga Allah menerima amal ibadah kita semua
+Selamat datang di Masjid An Nur Menara Mandiri • Mohon menonaktifkan suara HP saat berada di dalam masjid • Infaq & Shodaqoh melalui QRIS • Semoga Allah menerima amal ibadah kita semua
 
+</div>
+
+</div>
+
+<!-- ================= OVERLAY ================= -->
+
+<div class="overlay" id="overlay">
+
+<div class="overlay-title" id="overlayTitle">
+WAKTU AZAN
+</div>
+
+<div class="overlay-sub" id="overlaySub">
+Mohon Tenang & Persiapkan Shalat
+</div>
+
+<div class="overlay-count" id="overlayCount">
+04:00
 </div>
 
 </div>
@@ -554,31 +581,17 @@ setInterval(updateClock,1000);
 
 updateClock();
 
-/* ================= AUTO FULLSCREEN ================= */
+/* ================= FULLSCREEN ================= */
 
 async function autoFullscreen(){
 
 try{
-
-if(window.innerWidth > 768){
 
 const el = document.documentElement;
 
 if(el.requestFullscreen){
 
 await el.requestFullscreen();
-
-}
-else if(el.webkitRequestFullscreen){
-
-el.webkitRequestFullscreen();
-
-}
-else if(el.msRequestFullscreen){
-
-el.msRequestFullscreen();
-
-}
 
 }
 
@@ -590,11 +603,7 @@ console.log(err);
 
 }
 
-/* AUTO */
-
 setTimeout(autoFullscreen,2000);
-
-/* JIKA DITOLAK */
 
 document.body.addEventListener(
 'click',
@@ -627,31 +636,25 @@ console.log(err);
 
 enableWakeLock();
 
-/* SAAT TAB AKTIF */
-
 document.addEventListener(
 'visibilitychange',
-function(){
-
+()=>{
 if(document.visibilityState === 'visible'){
-
 enableWakeLock();
-
 }
-
 }
 );
 
 /* ================= VIDEO ================= */
 
-const video = document.getElementById('video');
+const video =
+document.getElementById('video');
 
 async function startVideo(){
 
 try{
 
 video.muted = true;
-video.volume = 0;
 
 await video.play();
 
@@ -665,7 +668,7 @@ console.log(err);
 
 startVideo();
 
-/* ================= JADWAL ================= */
+/* ================= SHALAT ================= */
 
 let jadwalGlobal = null;
 
@@ -676,9 +679,7 @@ try{
 const now = new Date();
 
 const tahun = now.getFullYear();
-
 const bulan = String(now.getMonth()+1).padStart(2,'0');
-
 const tanggal = String(now.getDate()).padStart(2,'0');
 
 const url =
@@ -692,33 +693,25 @@ const jadwal = result.data.jadwal;
 
 jadwalGlobal = jadwal;
 
-document.getElementById('subuh').innerHTML =
-jadwal.subuh;
-
-document.getElementById('dzuhur').innerHTML =
-jadwal.dzuhur;
-
-document.getElementById('ashar').innerHTML =
-jadwal.ashar;
-
-document.getElementById('maghrib').innerHTML =
-jadwal.maghrib;
-
-document.getElementById('isya').innerHTML =
-jadwal.isya;
+document.getElementById('subuh').innerHTML = jadwal.subuh;
+document.getElementById('dzuhur').innerHTML = jadwal.dzuhur;
+document.getElementById('ashar').innerHTML = jadwal.ashar;
+document.getElementById('maghrib').innerHTML = jadwal.maghrib;
+document.getElementById('isya').innerHTML = jadwal.isya;
 
 updateNextPrayer();
 
-}
-catch(error){
+}catch(err){
 
-console.log(error);
+console.log(err);
 
 }
 
 }
 
 loadPrayer();
+
+setInterval(loadPrayer,3600000);
 
 /* ================= NEXT SHALAT ================= */
 
@@ -733,13 +726,16 @@ now.getHours()*60 + now.getMinutes();
 
 const prayerTimes = [
 
-{name:'SUBUH',time:jadwalGlobal.subuh},
-{name:'DZUHUR',time:jadwalGlobal.dzuhur},
-{name:'ASHAR',time:jadwalGlobal.ashar},
-{name:'MAGHRIB',time:jadwalGlobal.maghrib},
-{name:'ISYA',time:jadwalGlobal.isya}
+{name:'SUBUH',time:jadwalGlobal.subuh,id:'box-subuh'},
+{name:'DZUHUR',time:jadwalGlobal.dzuhur,id:'box-dzuhur'},
+{name:'ASHAR',time:jadwalGlobal.ashar,id:'box-ashar'},
+{name:'MAGHRIB',time:jadwalGlobal.maghrib,id:'box-maghrib'},
+{name:'ISYA',time:jadwalGlobal.isya,id:'box-isya'}
 
 ];
+
+document.querySelectorAll('.prayer')
+.forEach(el=>el.classList.remove('active-prayer'));
 
 let nextPrayer = null;
 
@@ -768,19 +764,304 @@ nextPrayer = prayerTimes[0];
 
 }
 
-document.getElementById('nextBox').innerHTML =
+document.getElementById(nextPrayer.id)
+.classList.add('active-prayer');
 
-`
-<h2>SHALAT BERIKUTNYA</h2>
+document.getElementById('nextPrayer')
+.innerHTML =
+`${nextPrayer.name} • ${nextPrayer.time}`;
 
-<p id="nextPrayer">
-${nextPrayer.name} • ${nextPrayer.time}
-</p>
-`;
+const target =
+new Date();
+
+const parts =
+nextPrayer.time.split(':');
+
+target.setHours(parts[0]);
+target.setMinutes(parts[1]);
+target.setSeconds(0);
+
+if(target < now){
+target.setDate(target.getDate()+1);
+}
+
+const diff =
+target - now;
+
+const hours =
+Math.floor(diff/1000/60/60);
+
+const minutes =
+Math.floor((diff/1000/60)%60);
+
+const seconds =
+Math.floor((diff/1000)%60);
+
+document.getElementById('countdown')
+.innerHTML =
+`${hours}j ${minutes}m ${seconds}d`;
 
 }
 
-setInterval(updateNextPrayer,60000);
+setInterval(updateNextPrayer,1000);
+
+/* ================= MODE ================= */
+
+let modeAzan = false;
+let modeIqomah = false;
+
+/* ================= CEK WAKTU ================= */
+
+function checkPrayerTime(){
+
+if(!jadwalGlobal) return;
+
+const now = new Date();
+
+const jam =
+String(now.getHours()).padStart(2,'0');
+
+const menit =
+String(now.getMinutes()).padStart(2,'0');
+
+const current =
+`${jam}:${menit}`;
+
+const hari = now.getDay();
+
+const prayers = [
+
+{
+name:'SUBUH',
+time:jadwalGlobal.subuh
+},
+
+{
+name:'DZUHUR',
+time:jadwalGlobal.dzuhur
+},
+
+{
+name:'ASHAR',
+time:jadwalGlobal.ashar
+},
+
+{
+name:'MAGHRIB',
+time:jadwalGlobal.maghrib
+},
+
+{
+name:'ISYA',
+time:jadwalGlobal.isya
+}
+
+];
+
+for(let i=0;i<prayers.length;i++){
+
+if(
+current === prayers[i].time
+&& now.getSeconds() === 0
+&& !modeAzan
+&& !modeIqomah
+){
+
+/* ================= KHUSUS JUMAT ================= */
+
+if(
+hari === 5
+&& prayers[i].name === 'DZUHUR'
+){
+
+startAzanJumat();
+
+}
+else{
+
+startAzan();
+
+}
+
+}
+
+}
+
+}
+
+/* ================= AZAN NORMAL ================= */
+
+function startAzan(){
+
+modeAzan = true;
+
+video.pause();
+
+const overlay =
+document.getElementById('overlay');
+
+overlay.style.display = 'flex';
+
+document.getElementById('overlayTitle')
+.innerHTML = 'WAKTU AZAN';
+
+document.getElementById('overlaySub')
+.innerHTML =
+'Mohon Tenang & Persiapkan Shalat';
+
+let duration = 240;
+
+const interval = setInterval(()=>{
+
+const menit =
+String(Math.floor(duration/60))
+.padStart(2,'0');
+
+const detik =
+String(duration%60)
+.padStart(2,'0');
+
+document.getElementById('overlayCount')
+.innerHTML =
+`${menit}:${detik}`;
+
+duration--;
+
+if(duration < 0){
+
+clearInterval(interval);
+
+startIqomah();
+
+}
+
+},1000);
+
+}
+
+/* ================= KHUSUS JUMAT ================= */
+
+function startAzanJumat(){
+
+modeAzan = true;
+
+video.pause();
+
+const overlay =
+document.getElementById('overlay');
+
+overlay.style.display = 'flex';
+
+document.getElementById('overlayTitle')
+.innerHTML = 'WAKTU AZAN JUMAT';
+
+document.getElementById('overlaySub')
+.innerHTML =
+'Mohon Tenang & Persiapkan Shalat Jumat';
+
+let duration = 240;
+
+const interval = setInterval(()=>{
+
+const menit =
+String(Math.floor(duration/60))
+.padStart(2,'0');
+
+const detik =
+String(duration%60)
+.padStart(2,'0');
+
+document.getElementById('overlayCount')
+.innerHTML =
+`${menit}:${detik}`;
+
+duration--;
+
+if(duration < 0){
+
+clearInterval(interval);
+
+finishJumat();
+
+}
+
+},1000);
+
+}
+
+/* ================= IQOMAH ================= */
+
+function startIqomah(){
+
+modeAzan = false;
+modeIqomah = true;
+
+document.getElementById('overlayTitle')
+.innerHTML = 'MENUJU IQOMAH';
+
+document.getElementById('overlaySub')
+.innerHTML =
+'Luruskan & Rapatkan Shaf';
+
+let duration = 600;
+
+const interval = setInterval(()=>{
+
+const menit =
+String(Math.floor(duration/60))
+.padStart(2,'0');
+
+const detik =
+String(duration%60)
+.padStart(2,'0');
+
+document.getElementById('overlayCount')
+.innerHTML =
+`${menit}:${detik}`;
+
+duration--;
+
+if(duration < 0){
+
+clearInterval(interval);
+
+finishIqomah();
+
+}
+
+},1000);
+
+}
+
+/* ================= SELESAI IQOMAH ================= */
+
+function finishIqomah(){
+
+modeIqomah = false;
+
+document.getElementById('overlay')
+.style.display = 'none';
+
+video.play();
+
+}
+
+/* ================= SELESAI JUMAT ================= */
+
+function finishJumat(){
+
+modeAzan = false;
+
+document.getElementById('overlay')
+.style.display = 'none';
+
+video.play();
+
+}
+
+/* ================= LOOP ================= */
+
+setInterval(checkPrayerTime,1000);
 
 </script>
 
