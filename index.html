@@ -554,6 +554,94 @@ setInterval(updateClock,1000);
 
 updateClock();
 
+/* ================= AUTO FULLSCREEN ================= */
+
+async function autoFullscreen(){
+
+try{
+
+if(window.innerWidth > 768){
+
+const el = document.documentElement;
+
+if(el.requestFullscreen){
+
+await el.requestFullscreen();
+
+}
+else if(el.webkitRequestFullscreen){
+
+el.webkitRequestFullscreen();
+
+}
+else if(el.msRequestFullscreen){
+
+el.msRequestFullscreen();
+
+}
+
+}
+
+}catch(err){
+
+console.log(err);
+
+}
+
+}
+
+/* AUTO */
+
+setTimeout(autoFullscreen,2000);
+
+/* JIKA DITOLAK */
+
+document.body.addEventListener(
+'click',
+autoFullscreen,
+{once:true}
+);
+
+/* ================= WAKE LOCK ================= */
+
+let wakeLock = null;
+
+async function enableWakeLock(){
+
+try{
+
+if('wakeLock' in navigator){
+
+wakeLock =
+await navigator.wakeLock.request('screen');
+
+}
+
+}catch(err){
+
+console.log(err);
+
+}
+
+}
+
+enableWakeLock();
+
+/* SAAT TAB AKTIF */
+
+document.addEventListener(
+'visibilitychange',
+function(){
+
+if(document.visibilityState === 'visible'){
+
+enableWakeLock();
+
+}
+
+}
+);
+
 /* ================= VIDEO ================= */
 
 const video = document.getElementById('video');
@@ -577,11 +665,9 @@ console.log(err);
 
 startVideo();
 
-/* ================= MODE ================= */
+/* ================= JADWAL ================= */
 
 let jadwalGlobal = null;
-
-/* ================= LOAD JADWAL ================= */
 
 async function loadPrayer(){
 
