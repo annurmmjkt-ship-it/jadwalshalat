@@ -102,7 +102,9 @@ margin-bottom:4px;
 }
 
 .hijri{
-font-size:0px;
+font-size:20px;
+color:#ddd;
+margin-bottom:6px;
 }
 
 /* ================= MAIN ================= */
@@ -123,6 +125,7 @@ border-radius:28px;
 padding:25px;
 backdrop-filter:blur(10px);
 border:1px solid rgba(255,255,255,0.08);
+overflow-y:auto;
 }
 
 /* ================= CLOCK ================= */
@@ -182,6 +185,22 @@ background:rgba(255,255,255,0.08);
 font-weight:bold;
 }
 
+/* ================= QRIS ================= */
+
+.qris-box{
+margin-top:20px;
+background:white;
+padding:10px;
+border-radius:22px;
+overflow:hidden;
+}
+
+.qris-img{
+width:100%;
+display:block;
+border-radius:16px;
+}
+
 /* ================= RIGHT PANEL ================= */
 
 .right{
@@ -216,7 +235,7 @@ opacity:0.4;
 .video-frame{
 width:100%;
 height:100%;
-object-fit:contain;
+object-fit:cover;
 background:black;
 border:none;
 }
@@ -293,7 +312,7 @@ font-size:20px;
 }
 
 .hijri{
-font-size:0px;
+font-size:15px;
 }
 
 .main{
@@ -301,8 +320,6 @@ grid-template-columns:1fr;
 padding:12px;
 height:auto;
 }
-
-/* HIDE VIDEO */
 
 .right{
 display:none;
@@ -348,6 +365,11 @@ height:42px;
 .marquee{
 font-size:18px;
 animation:jalan 40s linear infinite;
+}
+
+.qris-box{
+margin-top:16px;
+border-radius:18px;
 }
 
 }
@@ -437,6 +459,17 @@ JADWAL SHALAT
 <div id="isya">--:--</div>
 </div>
 
+<!-- ================= QRIS ================= -->
+
+<div class="qris-box">
+
+<img
+src="qris.png"
+alt="QRIS Masjid"
+class="qris-img">
+
+</div>
+
 </div>
 
 <!-- ================= RIGHT ================= -->
@@ -472,8 +505,7 @@ Browser tidak mendukung video.
 
 <div class="marquee">
 
-Selamat datang di Masjid Annur Menara Mandiri Jakarta • Jadwal shalat mengikuti data Kementerian Agama Republik Indonesia • Mohon menonaktifkan suara HP saat berada di dalam masjid • Salurkan Infaq & Shodaqoh melalui QRIS atau Rekening Bank Mandiri 1020030005000 • Jamaah dapat mengakses langsung dari HP masing2 jadwal shalat online melalui Website www.bit.ly/annurmm • DKM Masjid An Nur Menara Mandiri • Semoga Allah menerima amal ibadah kita semua
-
+Selamat datang di Masjid Annur Menara Mandiri Jakarta • Jadwal shalat mengikuti data Kementerian Agama Republik Indonesia • Mohon menonaktifkan suara HP saat berada di dalam masjid • Salurkan Infaq & Shodaqoh melalui QRIS atau Rekening Bank Mandiri 1020030005000 • Jamaah dapat mengakses langsung dari HP masing-masing jadwal shalat online melalui Website www.bit.ly/annurmm • DKM Masjid An Nur Menara Mandiri • Semoga Allah menerima amal ibadah kita semua
 
 </div>
 
@@ -522,47 +554,32 @@ setInterval(updateClock,1000);
 
 updateClock();
 
-/* ================= AUTO FULLSCREEN ================= */
-
-function autoFullscreen(){
-
-if(window.innerWidth > 768){
-
-const el = document.documentElement;
-
-if(el.requestFullscreen){
-el.requestFullscreen();
-}
-
-}
-
-}
-
-setTimeout(autoFullscreen,2000);
-
 /* ================= VIDEO ================= */
 
 const video = document.getElementById('video');
 
+async function startVideo(){
+
+try{
+
 video.muted = true;
+video.volume = 0;
 
-video.play().catch(function(error){
+await video.play();
 
-console.log(error);
+}catch(err){
 
-});
+console.log(err);
+
+}
+
+}
+
+startVideo();
 
 /* ================= MODE ================= */
 
-let modeAzan = false;
-let modeIqomah = false;
-
-let azanEndTime = null;
-let iqomahEndTime = null;
-
 let jadwalGlobal = null;
-
-window.currentPrayerName = '';
 
 /* ================= LOAD JADWAL ================= */
 
@@ -578,8 +595,6 @@ const bulan = String(now.getMonth()+1).padStart(2,'0');
 
 const tanggal = String(now.getDate()).padStart(2,'0');
 
-/* 1301 = DKI Jakarta */
-
 const url =
 `https://api.myquran.com/v2/sholat/jadwal/1301/${tahun}/${bulan}/${tanggal}`;
 
@@ -590,8 +605,6 @@ const result = await response.json();
 const jadwal = result.data.jadwal;
 
 jadwalGlobal = jadwal;
-
-/* ================= TAMPILKAN ================= */
 
 document.getElementById('subuh').innerHTML =
 jadwal.subuh;
@@ -634,34 +647,15 @@ now.getHours()*60 + now.getMinutes();
 
 const prayerTimes = [
 
-{
-name:'SUBUH',
-time:jadwalGlobal.subuh
-},
-
-{
-name:'DZUHUR',
-time:jadwalGlobal.dzuhur
-},
-
-{
-name:'ASHAR',
-time:jadwalGlobal.ashar
-},
-
-{
-name:'MAGHRIB',
-time:jadwalGlobal.maghrib
-},
-
-{
-name:'ISYA',
-time:jadwalGlobal.isya
-}
+{name:'SUBUH',time:jadwalGlobal.subuh},
+{name:'DZUHUR',time:jadwalGlobal.dzuhur},
+{name:'ASHAR',time:jadwalGlobal.ashar},
+{name:'MAGHRIB',time:jadwalGlobal.maghrib},
+{name:'ISYA',time:jadwalGlobal.isya}
 
 ];
 
-let nextPrayer = prayerTimes[0];
+let nextPrayer = null;
 
 for(let i=0;i<prayerTimes.length;i++){
 
@@ -682,6 +676,12 @@ break;
 
 }
 
+if(!nextPrayer){
+
+nextPrayer = prayerTimes[0];
+
+}
+
 document.getElementById('nextBox').innerHTML =
 
 `
@@ -694,227 +694,7 @@ ${nextPrayer.name} • ${nextPrayer.time}
 
 }
 
-/* ================= CEK WAKTU SHALAT ================= */
-
-function checkPrayerTime(){
-
-if(!jadwalGlobal) return;
-
-const now = new Date();
-
-const current =
-String(now.getHours()).padStart(2,'0') +
-':' +
-String(now.getMinutes()).padStart(2,'0');
-
-const prayerList = [
-
-{
-name:'SUBUH',
-time:jadwalGlobal.subuh
-},
-
-{
-name:'DZUHUR',
-time:jadwalGlobal.dzuhur
-},
-
-{
-name:'ASHAR',
-time:jadwalGlobal.ashar
-},
-
-{
-name:'MAGHRIB',
-time:jadwalGlobal.maghrib
-},
-
-{
-name:'ISYA',
-time:jadwalGlobal.isya
-}
-
-];
-
-for(let i=0;i<prayerList.length;i++){
-
-if(current === prayerList[i].time &&
-!modeAzan &&
-!modeIqomah){
-
-startAzan(prayerList[i].name);
-
-}
-
-}
-
-}
-
-/* ================= START AZAN ================= */
-
-function startAzan(prayerName){
-
-modeAzan = true;
-
-window.currentPrayerName = prayerName;
-
-const now = new Date();
-
-/* 4 MENIT */
-
-azanEndTime =
-new Date(now.getTime() + (4 * 60 * 1000));
-
-document.getElementById('nextBox').innerHTML =
-
-`
-<h2>SAAT INI</h2>
-
-<p style="font-size:52px">
-AZAN ${prayerName}
-</p>
-`;
-
-}
-
-/* ================= START IQOMAH ================= */
-
-function startIqomah(){
-
-const now = new Date();
-
-const isFriday = now.getDay() === 5;
-
-/* ================= KHUSUS JUMAT DZUHUR ================= */
-
-if(
-isFriday &&
-window.currentPrayerName === 'DZUHUR'
-){
-
-modeAzan = false;
-modeIqomah = false;
-
-updateNextPrayer();
-
-return;
-
-}
-
-/* ================= NORMAL ================= */
-
-modeAzan = false;
-
-modeIqomah = true;
-
-/* 10 MENIT */
-
-iqomahEndTime =
-new Date(now.getTime() + (10 * 60 * 1000));
-
-}
-
-/* ================= UPDATE TIMER ================= */
-
-function updateIqomahTimer(){
-
-const now = new Date();
-
-/* ================= MODE AZAN ================= */
-
-if(modeAzan){
-
-const diff =
-azanEndTime - now;
-
-if(diff <= 0){
-
-startIqomah();
-
-return;
-
-}
-
-const menit =
-Math.floor(diff / 1000 / 60);
-
-const detik =
-Math.floor((diff / 1000) % 60);
-
-document.getElementById('nextBox').innerHTML =
-
-`
-<h2>AZAN BERLANGSUNG</h2>
-
-<p style="font-size:58px">
-${String(menit).padStart(2,'0')}:
-${String(detik).padStart(2,'0')}
-</p>
-`;
-
-}
-
-/* ================= MODE IQOMAH ================= */
-
-if(modeIqomah){
-
-const diff =
-iqomahEndTime - now;
-
-if(diff <= 0){
-
-modeIqomah = false;
-
-document.getElementById('nextBox').innerHTML =
-
-`
-<h2>IQOMAH</h2>
-
-<p style="font-size:52px">
-SHALAT DIMULAI
-</p>
-`;
-
-setTimeout(function(){
-
-location.reload();
-
-},15000);
-
-return;
-
-}
-
-const menit =
-Math.floor(diff / 1000 / 60);
-
-const detik =
-Math.floor((diff / 1000) % 60);
-
-document.getElementById('nextBox').innerHTML =
-
-`
-<h2>MENUJU IQOMAH</h2>
-
-<p style="font-size:58px">
-${String(menit).padStart(2,'0')}:
-${String(detik).padStart(2,'0')}
-</p>
-`;
-
-}
-
-}
-
-/* ================= LOOP ================= */
-
-setInterval(function(){
-
-checkPrayerTime();
-
-updateIqomahTimer();
-
-},1000);
+setInterval(updateNextPrayer,60000);
 
 </script>
 
