@@ -20,6 +20,7 @@ background:#000;
 overflow:hidden;
 height:100vh;
 color:white;
+touch-action:manipulation;
 }
 
 /* ================= BACKGROUND ================= */
@@ -80,8 +81,6 @@ font-weight:bold;
 
 .title p{
 font-size:0px;
-color:#ddd;
-margin-top:4px;
 }
 
 /* ================= DATE ================= */
@@ -103,7 +102,6 @@ margin-bottom:6px;
 
 .hijri{
 font-size:0px;
-color:#fff;
 }
 
 /* ================= MAIN ================= */
@@ -219,18 +217,20 @@ background:black;
 border:1px solid rgba(255,255,255,0.08);
 }
 
-'.live{
-'position:absolute;
-'top:18px;
-'right:18px;
-'background:red;
-'padding:10px 20px;
-'border-radius:14px;
-'font-size:24px;
-'font-weight:bold;
-'z-index:10;
-'animation:blink 1s infinite;
-'}
+/* ================= LIVE ================= */
+
+.live{
+position:absolute;
+top:18px;
+right:18px;
+background:red;
+padding:10px 20px;
+border-radius:14px;
+font-size:24px;
+font-weight:bold;
+z-index:10;
+animation:blink 1s infinite;
+}
 
 @keyframes blink{
 50%{
@@ -341,10 +341,6 @@ flex-direction:column;
 font-size:28px;
 }
 
-.title p{
-font-size:0px;
-}
-
 .main{
 grid-template-columns:1fr;
 padding:12px;
@@ -393,8 +389,6 @@ font-size:70px;
 
 <div class="bg"></div>
 
-<!-- ================= HEADER ================= -->
-
 <div class="header">
 
 <div class="logo-area">
@@ -417,11 +411,7 @@ font-size:70px;
 
 </div>
 
-<!-- ================= MAIN ================= -->
-
 <div class="main">
-
-<!-- ================= LEFT ================= -->
 
 <div class="left">
 
@@ -472,25 +462,17 @@ JADWAL SHALAT
 <div id="isya">--:--</div>
 </div>
 
-<!-- ================= QRIS ================= -->
-
 <div class="qris-box">
-
-<img
-src="gambar-qris.jpg"
-class="qris-img">
-
+<img src="gambar-qris.jpg" class="qris-img">
 </div>
 
 </div>
-
-<!-- ================= RIGHT ================= -->
 
 <div class="right">
 
-<div class="live">
+'<div class="live">
 
-</div>
+'</div>
 
 <video
 id="video"
@@ -508,20 +490,15 @@ playsinline>
 
 </div>
 
-<!-- ================= FOOTER ================= -->
-
 <div class="footer">
 
 <div class="marquee">
 
-Selamat datang di Masjid An Nur Menara Mandiri Jakarta • Mohon menonaktifkan suara HP saat berada di dalam masjid • Salurkan Infaq & Shodaqoh melalui QRIS atau Rekening Bank Mandiri 1020030005000 • Jamaah dapat mengakses langsung dari HP masing2 jadwal shalat online melalui Website www.bit.ly/annurmm 
- • Semoga Allah menerima amal ibadah kita semua • DKM Masjid An Nur Menara Mandiri
+Selamat datang di Masjid An Nur Menara Mandiri Jakarta • Mohon menonaktifkan suara HP saat berada di dalam masjid • Salurkan Infaq & Shodaqoh melalui QRIS atau Rekening Bank Mandiri 1020030005000 • Jamaah dapat mengakses langsung dari HP masing2 jadwal shalat online melalui Website www.bit.ly/annurmm • Semoga Allah menerima amal ibadah kita semua • DKM Masjid An Nur Menara Mandiri
 
 </div>
 
 </div>
-
-<!-- ================= OVERLAY ================= -->
 
 <div class="overlay" id="overlay">
 
@@ -538,8 +515,6 @@ Mohon Tenang & Persiapkan Shalat
 </div>
 
 </div>
-
-<!-- ================= SCRIPT ================= -->
 
 <script>
 
@@ -590,9 +565,23 @@ try{
 
 const el = document.documentElement;
 
+if(!document.fullscreenElement){
+
 if(el.requestFullscreen){
 
 await el.requestFullscreen();
+
+}
+else if(el.webkitRequestFullscreen){
+
+await el.webkitRequestFullscreen();
+
+}
+else if(el.msRequestFullscreen){
+
+await el.msRequestFullscreen();
+
+}
 
 }
 
@@ -611,6 +600,14 @@ document.body.addEventListener(
 autoFullscreen,
 {once:true}
 );
+
+/* ================= AUTO FULLSCREEN LOOP ================= */
+
+setInterval(()=>{
+
+autoFullscreen();
+
+},5000);
 
 /* ================= WAKE LOCK ================= */
 
@@ -642,6 +639,7 @@ document.addEventListener(
 ()=>{
 if(document.visibilityState === 'visible'){
 enableWakeLock();
+autoFullscreen();
 }
 }
 );
@@ -668,6 +666,16 @@ console.log(err);
 }
 
 startVideo();
+
+video.setAttribute('webkit-playsinline','true');
+video.setAttribute('playsinline','true');
+
+document.addEventListener('click',()=>{
+
+video.play();
+autoFullscreen();
+
+});
 
 /* ================= SHALAT ================= */
 
@@ -705,6 +713,8 @@ updateNextPrayer();
 }catch(err){
 
 console.log(err);
+
+reconnectInternet();
 
 }
 
@@ -832,30 +842,11 @@ const hari = now.getDay();
 
 const prayers = [
 
-{
-name:'SUBUH',
-time:jadwalGlobal.subuh
-},
-
-{
-name:'DZUHUR',
-time:jadwalGlobal.dzuhur
-},
-
-{
-name:'ASHAR',
-time:jadwalGlobal.ashar
-},
-
-{
-name:'MAGHRIB',
-time:jadwalGlobal.maghrib
-},
-
-{
-name:'ISYA',
-time:jadwalGlobal.isya
-}
+{name:'SUBUH',time:jadwalGlobal.subuh},
+{name:'DZUHUR',time:jadwalGlobal.dzuhur},
+{name:'ASHAR',time:jadwalGlobal.ashar},
+{name:'MAGHRIB',time:jadwalGlobal.maghrib},
+{name:'ISYA',time:jadwalGlobal.isya}
 
 ];
 
@@ -867,8 +858,6 @@ current === prayers[i].time
 && !modeAzan
 && !modeIqomah
 ){
-
-/* ================= KHUSUS JUMAT ================= */
 
 if(
 hari === 5
@@ -890,7 +879,7 @@ startAzan();
 
 }
 
-/* ================= AZAN NORMAL ================= */
+/* ================= AZAN ================= */
 
 function startAzan(){
 
@@ -910,17 +899,18 @@ document.getElementById('overlaySub')
 .innerHTML =
 'Mohon Tenang & Persiapkan Shalat';
 
+document.getElementById('overlayCount')
+.innerHTML = '04:00';
+
 let duration = 240;
 
 const interval = setInterval(()=>{
 
 const menit =
-String(Math.floor(duration/60))
-.padStart(2,'0');
+String(Math.floor(duration/60)).padStart(2,'0');
 
 const detik =
-String(duration%60)
-.padStart(2,'0');
+String(duration%60).padStart(2,'0');
 
 document.getElementById('overlayCount')
 .innerHTML =
@@ -940,7 +930,7 @@ startIqomah();
 
 }
 
-/* ================= KHUSUS JUMAT ================= */
+/* ================= JUMAT ================= */
 
 function startAzanJumat(){
 
@@ -960,17 +950,18 @@ document.getElementById('overlaySub')
 .innerHTML =
 'Mohon Tenang & Persiapkan Shalat Jumat';
 
+document.getElementById('overlayCount')
+.innerHTML = '04:00';
+
 let duration = 240;
 
 const interval = setInterval(()=>{
 
 const menit =
-String(Math.floor(duration/60))
-.padStart(2,'0');
+String(Math.floor(duration/60)).padStart(2,'0');
 
 const detik =
-String(duration%60)
-.padStart(2,'0');
+String(duration%60).padStart(2,'0');
 
 document.getElementById('overlayCount')
 .innerHTML =
@@ -1004,17 +995,18 @@ document.getElementById('overlaySub')
 .innerHTML =
 'Luruskan & Rapatkan Shaf';
 
+document.getElementById('overlayCount')
+.innerHTML = '10:00';
+
 let duration = 600;
 
 const interval = setInterval(()=>{
 
 const menit =
-String(Math.floor(duration/60))
-.padStart(2,'0');
+String(Math.floor(duration/60)).padStart(2,'0');
 
 const detik =
-String(duration%60)
-.padStart(2,'0');
+String(duration%60).padStart(2,'0');
 
 document.getElementById('overlayCount')
 .innerHTML =
@@ -1034,7 +1026,7 @@ finishIqomah();
 
 }
 
-/* ================= SELESAI IQOMAH ================= */
+/* ================= SELESAI ================= */
 
 function finishIqomah(){
 
@@ -1045,9 +1037,9 @@ document.getElementById('overlay')
 
 video.play();
 
-}
+autoFullscreen();
 
-/* ================= SELESAI JUMAT ================= */
+}
 
 function finishJumat(){
 
@@ -1058,7 +1050,134 @@ document.getElementById('overlay')
 
 video.play();
 
+autoFullscreen();
+
 }
+
+/* ================= AUTO CONNECT INTERNET ================= */
+
+let reconnecting = false;
+
+function showOfflineStatus(){
+
+if(modeAzan || modeIqomah) return;
+
+const overlay =
+document.getElementById('overlay');
+
+overlay.style.display = 'flex';
+
+document.getElementById('overlayTitle')
+.innerHTML = 'KONEKSI TERPUTUS';
+
+document.getElementById('overlaySub')
+.innerHTML =
+'Menghubungkan kembali jaringan internet';
+
+document.getElementById('overlayCount')
+.innerHTML = '...';
+
+}
+
+function hideOfflineStatus(){
+
+if(!modeAzan && !modeIqomah){
+
+document.getElementById('overlay')
+.style.display = 'none';
+
+}
+
+}
+
+async function reconnectInternet(){
+
+if(reconnecting) return;
+
+reconnecting = true;
+
+showOfflineStatus();
+
+const interval = setInterval(async()=>{
+
+try{
+
+const response =
+await fetch(
+'https://api.myquran.com/v2/sholat/jadwal/1301/2026/01/01',
+{
+method:'HEAD',
+cache:'no-store'
+}
+);
+
+if(response.ok){
+
+clearInterval(interval);
+
+reconnecting = false;
+
+hideOfflineStatus();
+
+await loadPrayer();
+
+await autoFullscreen();
+
+video.play();
+
+}
+
+}catch(err){
+
+console.log('Reconnect internet...');
+
+}
+
+},3000);
+
+}
+
+/* ================= STATUS INTERNET ================= */
+
+window.addEventListener('offline',()=>{
+
+reconnectInternet();
+
+});
+
+window.addEventListener('online',async()=>{
+
+hideOfflineStatus();
+
+await loadPrayer();
+
+await autoFullscreen();
+
+video.play();
+
+});
+
+/* ================= CEK INTERNET ================= */
+
+setInterval(async()=>{
+
+try{
+
+await fetch(
+'https://api.myquran.com/v2/sholat/jadwal/1301/2026/01/01',
+{
+method:'HEAD',
+cache:'no-store'
+}
+);
+
+}catch(err){
+
+reconnectInternet();
+
+}
+
+},15000);
 
 /* ================= LOOP ================= */
 
