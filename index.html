@@ -305,7 +305,7 @@ height:500px;
 
 <div class="title">
 <h1>MASJID JAMI ANNUR</h1>
-<p>Pasartanahtinggi • Jawa Barat</p>
+<p>DKI Jakarta • Indonesia</p>
 </div>
 
 </div>
@@ -335,7 +335,7 @@ height:500px;
 <div class="next-box">
 <h2>SHALAT BERIKUTNYA</h2>
 <p id="nextPrayer">
-MAGHRIB • 17:48
+Memuat...
 </p>
 </div>
 
@@ -345,27 +345,27 @@ JADWAL SHALAT
 
 <div class="prayer">
 <div class="prayer-name">SUBUH</div>
-<div id="subuh">04:31</div>
+<div id="subuh">--:--</div>
 </div>
 
 <div class="prayer">
 <div class="prayer-name">DZUHUR</div>
-<div id="dzuhur">11:46</div>
+<div id="dzuhur">--:--</div>
 </div>
 
-<div class="prayer active">
+<div class="prayer">
 <div class="prayer-name">ASHAR</div>
-<div id="ashar">15:09</div>
+<div id="ashar">--:--</div>
 </div>
 
 <div class="prayer">
 <div class="prayer-name">MAGHRIB</div>
-<div id="maghrib">17:30</div>
+<div id="maghrib">--:--</div>
 </div>
 
 <div class="prayer">
 <div class="prayer-name">ISYA</div>
-<div id="isya">18:47</div>
+<div id="isya">--:--</div>
 </div>
 
 </div>
@@ -403,7 +403,7 @@ Browser tidak mendukung video.
 
 <div class="marquee">
 
-Selamat datang di Masjid Jami Annur • Mohon menonaktifkan suara HP saat berada di dalam masjid • Semoga Allah menerima amal ibadah kita semua • Jadwal kajian rutin setiap malam Jumat ba'da Isya
+Selamat datang di Masjid Jami Annur • Jadwal shalat mengikuti data Kementerian Agama Republik Indonesia • Mohon menonaktifkan suara HP saat berada di dalam masjid • Semoga Allah menerima amal ibadah kita semua
 
 </div>
 
@@ -470,38 +470,7 @@ el.requestFullscreen();
 
 setTimeout(autoFullscreen,2000);
 
-/* ================= JADWAL SHALAT API ================= */
-
-async function loadPrayer(){
-
-try{
-
-const response = await fetch(
-'https://api.aladhan.com/v1/timingsByCity?city=Bandung&country=Indonesia&method=11'
-);
-
-const data = await response.json();
-
-const t = data.data.timings;
-
-document.getElementById('subuh').innerHTML = t.Fajr;
-document.getElementById('dzuhur').innerHTML = t.Dhuhr;
-document.getElementById('ashar').innerHTML = t.Asr;
-document.getElementById('maghrib').innerHTML = t.Maghrib;
-document.getElementById('isya').innerHTML = t.Isha;
-
-}
-catch(err){
-
-console.log(err);
-
-}
-
-}
-
-loadPrayer();
-
-/* ================= VIDEO AUTO PLAY ================= */
+/* ================= VIDEO AUTOPLAY ================= */
 
 const video = document.getElementById('video');
 
@@ -512,6 +481,99 @@ video.play().catch(function(error){
 console.log("Autoplay diblok:", error);
 
 });
+
+/* ================= JADWAL SHALAT KEMENAG ================= */
+
+async function loadPrayer(){
+
+try{
+
+const response = await fetch(
+'https://api.myquran.com/v2/sholat/jadwal/1301/' +
+new Date().getFullYear() + '/' +
+(String(new Date().getMonth()+1).padStart(2,'0')) + '/' +
+(String(new Date().getDate()).padStart(2,'0'))
+);
+
+const result = await response.json();
+
+const jadwal = result.data.jadwal;
+
+document.getElementById('subuh').innerHTML = jadwal.subuh;
+document.getElementById('dzuhur').innerHTML = jadwal.dzuhur;
+document.getElementById('ashar').innerHTML = jadwal.ashar;
+document.getElementById('maghrib').innerHTML = jadwal.maghrib;
+document.getElementById('isya').innerHTML = jadwal.isya;
+
+/* ================= NEXT SHALAT ================= */
+
+const now = new Date();
+
+const currentMinutes =
+now.getHours()*60 + now.getMinutes();
+
+const prayerTimes = [
+
+{
+name:'SUBUH',
+time:jadwal.subuh
+},
+
+{
+name:'DZUHUR',
+time:jadwal.dzuhur
+},
+
+{
+name:'ASHAR',
+time:jadwal.ashar
+},
+
+{
+name:'MAGHRIB',
+time:jadwal.maghrib
+},
+
+{
+name:'ISYA',
+time:jadwal.isya
+}
+
+];
+
+let nextPrayer = prayerTimes[0];
+
+for(let i=0;i<prayerTimes.length;i++){
+
+const parts = prayerTimes[i].time.split(':');
+
+const minutes =
+parseInt(parts[0])*60 +
+parseInt(parts[1]);
+
+if(minutes > currentMinutes){
+
+nextPrayer = prayerTimes[i];
+
+break;
+
+}
+
+}
+
+document.getElementById('nextPrayer').innerHTML =
+nextPrayer.name + ' • ' + nextPrayer.time;
+
+}
+catch(error){
+
+console.log(error);
+
+}
+
+}
+
+loadPrayer();
 
 </script>
 
