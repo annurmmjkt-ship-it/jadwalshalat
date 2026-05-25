@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -12,6 +13,11 @@
 margin:0;
 padding:0;
 box-sizing:border-box;
+}
+
+html,body{
+width:100%;
+height:100%;
 }
 
 body{
@@ -123,7 +129,13 @@ border-radius:28px;
 padding:25px;
 backdrop-filter:blur(10px);
 border:1px solid rgba(255,255,255,0.08);
-overflow-y:auto;
+
+/* PERBAIKAN TV */
+display:flex;
+flex-direction:column;
+
+overflow:hidden;
+height:100%;
 }
 
 /* ================= CLOCK ================= */
@@ -183,6 +195,7 @@ border-radius:18px;
 font-size:24px;
 background:rgba(255,255,255,0.08);
 transition:0.3s;
+flex-shrink:0;
 }
 
 .active-prayer{
@@ -194,19 +207,27 @@ font-weight:bold;
 /* ================= QRIS ================= */
 
 .qris-box{
-margin-top:12px;
+margin-top:auto;
 background:white;
-padding:6px;
+padding:10px;
 border-radius:22px;
 overflow:hidden;
+
+/* AGAR MEMENUHI AREA */
+height:280px;
+
+display:flex;
+justify-content:center;
+align-items:center;
 }
 
 .qris-img{
 width:100%;
+height:100%;
+object-fit:contain;
 display:block;
 border-radius:16px;
-max-height:220px;
-object-fit:contain;
+background:white;
 }
 
 /* ================= RIGHT ================= */
@@ -221,17 +242,17 @@ border:1px solid rgba(255,255,255,0.08);
 
 /* ================= LIVE ================= */
 
-'.live{
-'position:absolute;
-'top:18px;
-'right:18px;
-'background:red;
-'padding:10px 20px;
-'border-radius:14px;
-'font-size:24px;
-'font-weight:bold;
-'z-index:10;
-'animation:blink 1s infinite;
+.live{
+position:absolute;
+top:18px;
+right:18px;
+background:red;
+padding:10px 20px;
+border-radius:14px;
+font-size:24px;
+font-weight:bold;
+z-index:10;
+animation:blink 1s infinite;
 }
 
 @keyframes blink{
@@ -382,6 +403,10 @@ font-size:24px;
 font-size:70px;
 }
 
+.qris-box{
+height:220px;
+}
+
 }
 
 </style>
@@ -472,9 +497,9 @@ JADWAL SHALAT
 
 <div class="right">
 
-'<div class="live">
-
-'</div>
+<div class="live">
+LIVE
+</div>
 
 <video
 id="video"
@@ -496,8 +521,8 @@ playsinline>
 
 <div class="marquee">
 
-Selamat datang di Masjid An Nur Menara Mandiri Jakarta • Mohon menonaktifkan suara HP saat berada di dalam masjid • Salurkan Infaq & Shodaqoh melalui QRIS atau Rekening Bank Mandiri 1020030005000 • Jamaah dapat mengakses langsung dari HP masing2 jadwal shalat online melalui Website www.bit.ly/annurmm 
-• Berikut Agenda Kegiatan di Masjid An Nur Menara Mandiri (Kultum Harian Ba'da Zhuhur - Kitab Hadist Ibanatul Ahkam, Bimbingan Baca Al Quran - Tiap hari Senin & Kamis, Program Belajar Bahasa Arab - Tiap Hari Rabu, Kajian Ceramah 2 Pekanan - Hari Selasa, Penyediaan Ta'jil Buka Puasa Senin - Kamis) • Semoga Allah menerima amal ibadah kita semua • DKM Masjid An Nur Menara Mandiri         
+Selamat datang di Masjid An Nur Menara Mandiri Jakarta • Mohon menonaktifkan suara HP saat berada di dalam masjid • Salurkan Infaq & Shodaqoh melalui QRIS atau Rekening Bank Mandiri 1020030005000 • Jamaah dapat mengakses langsung dari HP masing2 jadwal shalat online melalui Website www.bit.ly/annurmm • Berikut Agenda Kegiatan di Masjid An Nur Menara Mandiri (Kultum Harian Ba'da Zhuhur - Kitab Hadist Ibanatul Ahkam, Bimbingan Baca Al Quran - Tiap hari Senin & Kamis, Program Belajar Bahasa Arab - Tiap Hari Rabu, Kajian Ceramah 2 Pekanan - Hari Selasa, Penyediaan Ta'jil Buka Puasa Senin - Kamis) • Semoga Allah menerima amal ibadah kita semua • DKM Masjid An Nur Menara Mandiri
+
 </div>
 
 </div>
@@ -603,6 +628,12 @@ autoFullscreen,
 {once:true}
 );
 
+setInterval(()=>{
+
+autoFullscreen();
+
+},5000);
+
 /* ================= AUTO FULLSCREEN LOOP ================= */
 
 setInterval(()=>{
@@ -639,10 +670,14 @@ enableWakeLock();
 document.addEventListener(
 'visibilitychange',
 ()=>{
+
 if(document.visibilityState === 'visible'){
+
 enableWakeLock();
 autoFullscreen();
+
 }
+
 }
 );
 
@@ -1189,3 +1224,4 @@ setInterval(checkPrayerTime,1000);
 
 </body>
 </html>
+```
