@@ -59,8 +59,6 @@ border-bottom:2px solid rgba(255,215,0,0.25);
 backdrop-filter:blur(10px);
 }
 
-/* ================= LOGO ================= */
-
 .logo-area{
 display:flex;
 align-items:center;
@@ -91,8 +89,6 @@ line-height:1.1;
 font-size:20px;
 }
 
-/* ================= DATE ================= */
-
 .date-box{
 padding:10px 18px;
 border-radius:16px;
@@ -105,11 +101,6 @@ text-align:right;
 font-size:22px;
 font-weight:bold;
 color:#ffd700;
-margin-bottom:4px;
-}
-
-.hijri{
-font-size:0;
 }
 
 /* ================= MAIN ================= */
@@ -117,11 +108,12 @@ font-size:0;
 .main{
 display:grid;
 grid-template-columns:34% 66%;
-gap:16px;
-padding:16px;
+gap:14px;
+padding:14px;
 padding-bottom:58px;
 height:calc(100vh - 140px);
 overflow:hidden;
+align-items:stretch;
 }
 
 /* ================= LEFT ================= */
@@ -129,71 +121,79 @@ overflow:hidden;
 .left{
 background:rgba(0,0,0,0.45);
 border-radius:24px;
-padding:18px;
+padding:16px;
 backdrop-filter:blur(10px);
 border:1px solid rgba(255,255,255,0.08);
-overflow:hidden;
+
 display:flex;
 flex-direction:column;
+
+height:100%;
+overflow:hidden;
+min-height:0;
 }
 
 /* ================= CLOCK ================= */
 
 .clock{
-font-size:72px;
+font-size:64px;
 font-weight:bold;
 text-align:center;
 color:#00ffe0;
-margin-bottom:18px;
+margin-bottom:14px;
 text-shadow:0 0 18px rgba(0,255,224,0.35);
+flex-shrink:0;
 }
 
 /* ================= NEXT SHALAT ================= */
 
 .next-box{
 background:linear-gradient(135deg,#ffd700,#ffb300);
-padding:16px;
+padding:12px;
 border-radius:18px;
 text-align:center;
 color:black;
-margin-bottom:18px;
+margin-bottom:12px;
+flex-shrink:0;
 }
 
 .next-box h2{
-font-size:20px;
+font-size:18px;
 }
 
 .next-box p{
 font-size:28px;
 font-weight:bold;
-margin-top:5px;
+margin-top:4px;
 }
 
 .countdown{
 font-size:18px;
-margin-top:8px;
+margin-top:6px;
 }
 
 /* ================= TABLE ================= */
 
 .table-title{
 text-align:center;
-font-size:28px;
+font-size:24px;
 font-weight:bold;
 color:#ffd700;
-margin-bottom:12px;
+margin-bottom:10px;
+flex-shrink:0;
 }
 
 .prayer{
 display:flex;
 justify-content:space-between;
 align-items:center;
-padding:14px 18px;
-margin-bottom:10px;
-border-radius:16px;
-font-size:24px;
+padding:11px 16px;
+margin-bottom:8px;
+border-radius:14px;
+font-size:22px;
 background:rgba(255,255,255,0.08);
 transition:0.3s;
+flex-shrink:0;
 }
 
 .active-prayer{
@@ -205,19 +205,21 @@ font-weight:bold;
 /* ================= QRIS ================= */
 
 .qris-box{
-margin-top:12px;
+margin-top:auto;
 background:white;
-padding:6px;
-border-radius:18px;
+padding:5px;
+border-radius:16px;
 overflow:hidden;
+flex-shrink:0;
 }
 
 .qris-img{
 width:100%;
-max-height:220px;
+height:160px;
 object-fit:contain;
 display:block;
 border-radius:12px;
+background:white;
 }
 
 /* ================= RIGHT ================= */
@@ -228,6 +230,13 @@ border-radius:24px;
 overflow:hidden;
 background:black;
 border:1px solid rgba(255,255,255,0.08);
+min-height:0;
+}
+
+.right video{
+width:100%;
+height:100%;
+object-fit:cover;
 }
 
 /* ================= LIVE ================= */
@@ -249,14 +258,6 @@ animation:blink 1s infinite;
 50%{
 opacity:0.4;
 }
-}
-
-.video-frame{
-width:100%;
-height:100%;
-object-fit:cover;
-background:black;
-border:none;
 }
 
 /* ================= FOOTER ================= */
@@ -339,7 +340,7 @@ zoom:0.92;
 
 }
 
-/* ================= HP MODE ================= */
+/* ================= MOBILE ================= */
 
 @media(max-width:768px){
 
@@ -429,7 +430,6 @@ font-size:70px;
 
 <div class="date-box">
 <div class="masehi" id="masehi"></div>
-<div class="hijri" id="hijri"></div>
 </div>
 
 </div>
@@ -520,8 +520,7 @@ preload="auto">
 
 <div class="marquee">
 
-Selamat datang di Masjid An Nur Menara Mandiri Jakarta • Mohon menonaktifkan suara HP saat berada di dalam masjid • Salurkan Infaq & Shodaqoh melalui QRIS atau Rekening Bank Mandiri 1020030005000 • Jamaah dapat mengakses langsung dari HP masing2 jadwal shalat online melalui Website www.bit.ly/annurmm 
-• Berikut Agenda Kegiatan di Masjid An Nur Menara Mandiri (Kultum Harian Ba'da Zhuhur - Kitab Hadist Ibanatul Ahkam, Bimbingan Baca Al Quran - Tiap hari Senin & Kamis, Program Belajar Bahasa Arab - Tiap Hari Rabu, Kajian Ceramah 2 Pekanan - Hari Selasa, Penyediaan Ta'jil Buka Puasa Senin - Kamis) • Semoga Allah menerima amal ibadah kita semua • DKM Masjid An Nur Menara Mandiri  
+Selamat datang di Masjid An Nur Menara Mandiri Jakarta • Mohon menonaktifkan suara HP saat berada di dalam masjid • Salurkan Infaq & Shodaqoh melalui QRIS atau Rekening Bank Mandiri 1020030005000 • Jamaah dapat mengakses langsung dari HP masing-masing jadwal shalat online melalui Website www.bit.ly/annurmm • Semoga Allah menerima amal ibadah kita semua • DKM Masjid An Nur Menara Mandiri
 
 </div>
 
@@ -568,6 +567,7 @@ year:'numeric'
 }
 
 setInterval(updateClock,1000);
+
 updateClock();
 
 /* ================= FULLSCREEN ================= */
@@ -671,17 +671,13 @@ video.play();
 
 video.addEventListener('pause',()=>{
 
-if(!modeAzan && !modeIqomah){
-
 video.play();
-
-}
 
 });
 
 setInterval(()=>{
 
-if(video.paused && !modeAzan && !modeIqomah){
+if(video.paused){
 
 video.play();
 
@@ -733,6 +729,100 @@ console.log(err);
 }
 
 loadPrayer();
+
+setInterval(loadPrayer,3600000);
+
+/* ================= NEXT SHALAT ================= */
+
+function updateNextPrayer(){
+
+if(!jadwalGlobal) return;
+
+const now = new Date();
+
+const currentMinutes =
+now.getHours()*60 + now.getMinutes();
+
+const prayerTimes = [
+
+{name:'SUBUH',time:jadwalGlobal.subuh,id:'box-subuh'},
+{name:'DZUHUR',time:jadwalGlobal.dzuhur,id:'box-dzuhur'},
+{name:'ASHAR',time:jadwalGlobal.ashar,id:'box-ashar'},
+{name:'MAGHRIB',time:jadwalGlobal.maghrib,id:'box-maghrib'},
+{name:'ISYA',time:jadwalGlobal.isya,id:'box-isya'}
+
+];
+
+document.querySelectorAll('.prayer')
+.forEach(el=>el.classList.remove('active-prayer'));
+
+let nextPrayer = null;
+
+for(let i=0;i<prayerTimes.length;i++){
+
+const parts =
+prayerTimes[i].time.split(':');
+
+const minutes =
+parseInt(parts[0])*60 +
+parseInt(parts[1]);
+
+if(minutes > currentMinutes){
+
+nextPrayer = prayerTimes[i];
+
+break;
+
+}
+
+}
+
+if(!nextPrayer){
+
+nextPrayer = prayerTimes[0];
+
+}
+
+document.getElementById(nextPrayer.id)
+.classList.add('active-prayer');
+
+document.getElementById('nextPrayer')
+.innerHTML =
+`${nextPrayer.name} • ${nextPrayer.time}`;
+
+const target =
+new Date();
+
+const parts =
+nextPrayer.time.split(':');
+
+target.setHours(parts[0]);
+target.setMinutes(parts[1]);
+target.setSeconds(0);
+
+if(target < now){
+target.setDate(target.getDate()+1);
+}
+
+const diff =
+target - now;
+
+const hours =
+Math.floor(diff/1000/60/60);
+
+const minutes =
+Math.floor((diff/1000/60)%60);
+
+const seconds =
+Math.floor((diff/1000)%60);
+
+document.getElementById('countdown')
+.innerHTML =
+`${hours}j ${minutes}m ${seconds}d`;
+
+}
+
+setInterval(updateNextPrayer,1000);
 
 </script>
 
