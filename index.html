@@ -42,7 +42,7 @@ z-index:-2;
 /* ================= HEADER ================= */
 
 .header{
-height:110px;
+height:90px;
 display:flex;
 justify-content:space-between;
 align-items:center;
@@ -74,13 +74,13 @@ color:black;
 }
 
 .title h1{
-font-size:44px;
+font-size:42px;
 color:#ffd700;
 font-weight:bold;
 }
 
 .title p{
-font-size:0px;
+font-size:20px;
 }
 
 /* ================= DATE ================= */
@@ -94,7 +94,7 @@ text-align:right;
 }
 
 .masehi{
-font-size:24px;
+font-size:30px;
 font-weight:bold;
 color:#ffd700;
 margin-bottom:6px;
@@ -129,7 +129,7 @@ overflow-y:auto;
 /* ================= CLOCK ================= */
 
 .clock{
-font-size:90px;
+font-size:72px;
 font-weight:bold;
 text-align:center;
 color:#00ffe0;
@@ -167,7 +167,7 @@ margin-top:10px;
 
 .table-title{
 text-align:center;
-font-size:36px;
+font-size:28px;
 font-weight:bold;
 color:#ffd700;
 margin-bottom:18px;
@@ -177,10 +177,10 @@ margin-bottom:18px;
 display:flex;
 justify-content:space-between;
 align-items:center;
-padding:18px 22px;
+padding:14px 18px;
 margin-bottom:12px;
 border-radius:18px;
-font-size:30px;
+font-size:24px;
 background:rgba(255,255,255,0.08);
 transition:0.3s;
 }
@@ -194,9 +194,9 @@ font-weight:bold;
 /* ================= QRIS ================= */
 
 .qris-box{
-margin-top:20px;
+margin-top:12px;
 background:white;
-padding:10px;
+padding:6px;
 border-radius:22px;
 overflow:hidden;
 }
@@ -205,6 +205,8 @@ overflow:hidden;
 width:100%;
 display:block;
 border-radius:16px;
+max-height:220px;
+object-fit:contain;
 }
 
 /* ================= RIGHT ================= */
@@ -219,17 +221,17 @@ border:1px solid rgba(255,255,255,0.08);
 
 /* ================= LIVE ================= */
 
-.live{
-position:absolute;
-top:18px;
-right:18px;
-background:red;
-padding:10px 20px;
-border-radius:14px;
-font-size:24px;
-font-weight:bold;
-z-index:10;
-animation:blink 1s infinite;
+'.live{
+'position:absolute;
+'top:18px;
+'right:18px;
+'background:red;
+'padding:10px 20px;
+'border-radius:14px;
+'font-size:24px;
+'font-weight:bold;
+'z-index:10;
+'animation:blink 1s infinite;
 }
 
 @keyframes blink{
@@ -254,7 +256,7 @@ bottom:0;
 left:0;
 width:100%;
 height:50px;
-background:#ffd700;
+background:#191970;
 overflow:hidden;
 display:flex;
 align-items:center;
@@ -265,10 +267,10 @@ z-index:999;
 white-space:nowrap;
 display:inline-block;
 padding-left:100%;
-animation:jalan 50s linear infinite;
-font-size:26px;
+animation:jalan 105s linear infinite;
+font-size:45px;
 font-weight:bold;
-color:black;
+color:white;
 }
 
 @keyframes jalan{
@@ -298,7 +300,7 @@ text-align:center;
 }
 
 .overlay-title{
-font-size:90px;
+font-size:110px;
 font-weight:bold;
 color:#ffd700;
 margin-bottom:30px;
@@ -310,7 +312,7 @@ color:white;
 }
 
 .overlay-count{
-font-size:130px;
+font-size:170px;
 font-weight:bold;
 color:#00ffe0;
 margin-top:30px;
@@ -398,7 +400,7 @@ font-size:70px;
 </div>
 
 <div class="title">
-<h1>Masjid An Nur - Menara Mandiri Jakarta</h1>
+<h1>Masjid An Nur - Menara Mandiri</h1>
 <p>DKI Jakarta • Indonesia</p>
 </div>
 
@@ -482,7 +484,7 @@ muted
 loop
 playsinline>
 
-<source src="gambar2.mp4" type="video/mp4">
+<source src="Gambar4.mp4" type="video/mp4">
 
 </video>
 
@@ -494,8 +496,8 @@ playsinline>
 
 <div class="marquee">
 
-Selamat datang di Masjid An Nur Menara Mandiri Jakarta • Mohon menonaktifkan suara HP saat berada di dalam masjid • Salurkan Infaq & Shodaqoh melalui QRIS atau Rekening Bank Mandiri 1020030005000 • Jamaah dapat mengakses langsung dari HP masing2 jadwal shalat online melalui Website www.bit.ly/annurmm • Semoga Allah menerima amal ibadah kita semua • DKM Masjid An Nur Menara Mandiri
-
+Selamat datang di Masjid An Nur Menara Mandiri Jakarta • Mohon menonaktifkan suara HP saat berada di dalam masjid • Salurkan Infaq & Shodaqoh melalui QRIS atau Rekening Bank Mandiri 1020030005000 • Jamaah dapat mengakses langsung dari HP masing2 jadwal shalat online melalui Website www.bit.ly/annurmm 
+• Berikut Agenda Kegiatan di Masjid An Nur Menara Mandiri (Kultum Harian Ba'da Zhuhur - Kitab Hadist Ibanatul Ahkam, Bimbingan Baca Al Quran - Tiap hari Senin & Kamis, Program Belajar Bahasa Arab - Tiap Hari Rabu, Kajian Ceramah 2 Pekanan - Hari Selasa, Penyediaan Ta'jil Buka Puasa Senin - Kamis) • Semoga Allah menerima amal ibadah kita semua • DKM Masjid An Nur Menara Mandiri         
 </div>
 
 </div>
@@ -951,9 +953,9 @@ document.getElementById('overlaySub')
 'Mohon Tenang & Persiapkan Shalat Jumat';
 
 document.getElementById('overlayCount')
-.innerHTML = '04:00';
+.innerHTML = '05:00';
 
-let duration = 240;
+let duration = 300;
 
 const interval = setInterval(()=>{
 
