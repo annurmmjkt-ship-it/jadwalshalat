@@ -538,13 +538,14 @@ function updateClock(){
 
     document.getElementById('clock').innerHTML =
     `${hours}:${minutes}:${seconds}`;
-
 }
 
 setInterval(updateClock,1000);
 updateClock();
+    
+now.toLocaleTimeString('id-ID');
 
- document.getElementById('masehi').innerHTML =
+document.getElementById('masehi').innerHTML =
 now.toLocaleDateString(
 'id-ID',
 {
