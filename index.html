@@ -8,6 +8,114 @@
 
 <style>
 
+#slideShow,
+#nextSlide{
+
+width:100%;
+height:100%;
+object-fit:cover;
+position:absolute;
+top:0;
+left:0;
+
+}
+
+
+#slideShow{
+
+z-index:2;
+opacity:1;
+
+}
+
+
+#nextSlide{
+
+z-index:3;
+opacity:0;
+filter:blur(15px);
+
+}
+
+
+/* SLIDE BARU */
+
+.slide-transition{
+
+animation:newSlide 5s ease-in-out forwards;
+
+}
+
+
+@keyframes newSlide{
+
+
+0%{
+
+opacity:0;
+filter:blur(15px);
+
+}
+
+
+40%{
+
+opacity:0.4;
+filter:blur(8px);
+
+}
+
+
+100%{
+
+opacity:1;
+filter:blur(0);
+
+}
+
+}
+
+
+
+/* SLIDE LAMA */
+
+.slide-old{
+
+animation:oldSlide 5s ease-in-out forwards;
+
+}
+
+
+@keyframes oldSlide{
+
+
+0%{
+
+opacity:1;
+filter:blur(0);
+
+}
+
+
+50%{
+
+opacity:0.5;
+filter:blur(8px);
+
+}
+
+
+100%{
+
+opacity:0;
+filter:blur(15px);
+
+}
+
+}
+    
+
+
 *{
 margin:0;
 padding:0;
@@ -254,6 +362,12 @@ background:black;
 border:none;
 }
 
+/* ================= SCREEN SAVER GERAK ================= */
+
+.screen-move{
+transition: transform 2s ease-in-out;
+}
+    
 /* ================= FOOTER ================= */
 
 .footer{
@@ -390,6 +504,94 @@ font-size:70px;
 
 }
 
+
+#adminBtn{
+position:fixed;
+top:10px;
+right:350px;
+z-index:999999;
+background:#ffd700;
+color:#000;
+padding:10px 15px;
+border-radius:10px;
+cursor:pointer;
+font-weight:bold;
+}
+
+#adminPanel{
+display:none;
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+background:#111;
+padding:20px;
+border-radius:15px;
+width:550px;
+max-width:95%;
+z-index:999999;
+border:2px solid #ffd700;
+}
+
+#adminPanel h2{
+color:#ffd700;
+margin-bottom:15px;
+}
+
+#adminPanel input{
+width:100%;
+margin-bottom:10px;
+padding:8px;
+}
+
+#adminPanel button{
+padding:10px 15px;
+margin-right:5px;
+cursor:pointer;
+}
+
+#uploadStatus{
+margin-top:15px;
+color:#00ff99;
+font-weight:bold;
+}
+
+.upload-row{
+display:flex;
+align-items:center;
+gap:15px;
+margin:25px 0;
+}
+
+.upload-row label:first-child{
+width:90px;
+color:#ffd700;
+font-size:22px;
+font-weight:bold;
+}
+
+.btn-upload{
+
+background:#ffd700;
+color:#000;
+padding:8px 16px;
+border-radius:8px;
+cursor:pointer;
+font-weight:bold;
+font-size:16px;
+
+}
+
+.btn-upload input{
+display:none;
+}
+
+.upload-row span{
+color:white;
+font-size:16px;
+}
+
+
 </style>
 </head>
 
@@ -478,23 +680,19 @@ JADWAL SHALAT
 
 <div class="right">
 
-'<div class="live">
-
-'</div>
-
-<video
-id="video"
+<img
+id="slideShow"
 class="video-frame"
-autoplay
-muted
-loop
-playsinline>
+src="slide1.jpg"
+alt="Slide">
 
-<source src="Gambar5.mp4" type="video/mp4">
-
-</video>
-
+<img    
+id="nextSlide"
+class="video-frame"
+src="">    
+    
 </div>
+
 
 </div>
 
@@ -519,10 +717,110 @@ Mohon Tenang & Persiapkan Shalat
 </div>
 
 <div class="overlay-count" id="overlayCount">
-04:00
+05:00
 </div>
 
 </div>
+
+
+<div id="adminBtn">⚙ ADMIN</div>
+
+<div id="adminPanel">
+
+<h2>ADMIN UPLOAD SLIDE</h2>
+
+<input type="password" id="adminPass" placeholder="Password Admin">
+
+<input type="password" id="githubToken" placeholder="GitHub Token">
+
+<br><br>
+
+<div class="upload-row">
+
+<label>SLIDE 1</label>
+
+<label class="btn-upload">
+UPLOAD GAMBAR
+<input type="file" id="slide1Input" accept="image/*">
+</label>
+
+<span id="name1">Belum dipilih</span>
+
+</div>
+
+
+<div class="upload-row">
+
+<label>SLIDE 2</label>
+
+<label class="btn-upload">
+UPLOAD GAMBAR
+<input type="file" id="slide2Input" accept="image/*">
+</label>
+
+<span id="name2">Belum dipilih</span>
+
+</div>
+
+
+<div class="upload-row">
+
+<label>SLIDE 3</label>
+
+<label class="btn-upload">
+UPLOAD GAMBAR
+<input type="file" id="slide3Input" accept="image/*">
+</label>
+
+<span id="name3">Belum dipilih</span>
+
+</div>
+
+
+<div class="upload-row">
+
+<label>SLIDE 4</label>
+
+<label class="btn-upload">
+UPLOAD GAMBAR
+<input type="file" id="slide4Input" accept="image/*">
+</label>
+
+<span id="name4">Belum dipilih</span>
+
+</div>
+
+
+<div class="upload-row">
+
+<label>SLIDE 5</label>
+
+<label class="btn-upload">
+UPLOAD GAMBAR
+<input type="file" id="slide5Input" accept="image/*">
+</label>
+
+<span id="name5">Belum dipilih</span>
+
+</div>
+    
+
+    
+
+<button onclick="saveToken()">SIMPAN TOKEN</button>
+
+<button onclick="uploadSlides()">
+UPLOAD KE GITHUB
+</button>
+
+<button onclick="closeAdmin()">
+TUTUP
+</button>
+
+<div id="uploadStatus"></div>
+
+</div>
+
 
 <script>
 
@@ -532,8 +830,13 @@ function updateClock(){
 
 const now = new Date();
 
+const jam = String(now.getHours()).padStart(2,'0');
+const menit = String(now.getMinutes()).padStart(2,'0');
+const detik = String(now.getSeconds()).padStart(2,'0');
+
+
 document.getElementById('clock').innerHTML =
-now.toLocaleTimeString('id-ID');
+`${jam}:${menit}:${detik}`;
 
 document.getElementById('masehi').innerHTML =
 now.toLocaleDateString(
@@ -617,6 +920,7 @@ autoFullscreen();
 
 },5000);
 
+
 /* ================= WAKE LOCK ================= */
 
 let wakeLock = null;
@@ -630,6 +934,17 @@ if('wakeLock' in navigator){
 wakeLock =
 await navigator.wakeLock.request('screen');
 
+
+wakeLock.addEventListener(
+'release',
+()=>{
+
+console.log("Wake Lock aktif ulang");
+
+enableWakeLock();
+
+});
+
 }
 
 }catch(err){
@@ -640,50 +955,56 @@ console.log(err);
 
 }
 
+
 enableWakeLock();
+
 
 document.addEventListener(
 'visibilitychange',
 ()=>{
-if(document.visibilityState === 'visible'){
+
+if(document.visibilityState === "visible"){
+
 enableWakeLock();
-autoFullscreen();
-}
-}
-);
-
-/* ================= VIDEO ================= */
-
-const video =
-document.getElementById('video');
-
-async function startVideo(){
-
-try{
-
-video.muted = true;
-
-await video.play();
-
-}catch(err){
-
-console.log(err);
 
 }
-
-}
-
-startVideo();
-
-video.setAttribute('webkit-playsinline','true');
-video.setAttribute('playsinline','true');
-
-document.addEventListener('click',()=>{
-
-video.play();
-autoFullscreen();
 
 });
+
+/* ================= ANTI SCREEN SAVER LG TV ================= */
+
+function preventScreenSaver(){
+
+document.dispatchEvent(
+new MouseEvent(
+'mousemove',
+{
+bubbles:true,
+clientX:10,
+clientY:10
+}
+)
+);
+
+
+document.dispatchEvent(
+new Event(
+'touchstart',
+{
+bubbles:true
+}
+)
+);
+
+}
+
+
+setInterval(
+preventScreenSaver,
+30000
+);
+
+    
 
 /* ================= SHALAT ================= */
 
@@ -893,7 +1214,6 @@ function startAzan(){
 
 modeAzan = true;
 
-video.pause();
 
 const overlay =
 document.getElementById('overlay');
@@ -944,7 +1264,6 @@ function startAzanJumat(){
 
 modeAzan = true;
 
-video.pause();
 
 const overlay =
 document.getElementById('overlay');
@@ -1003,12 +1322,39 @@ document.getElementById('overlaySub')
 .innerHTML =
 'Luruskan & Rapatkan Shaf';
 
-document.getElementById('overlayCount')
-.innerHTML = '10:00';
 
-let duration = 600;
+/* ===== WAKTU IQOMAH ===== */
+
+let duration = 600; // default 10 menit
+
+
+// Magrib & Isya 8 menit
+const waktuSekarang = new Date();
+
+const jam =
+String(waktuSekarang.getHours()).padStart(2,'0');
+
+const menit =
+String(waktuSekarang.getMinutes()).padStart(2,'0');
+
+const sekarang =
+`${jam}:${menit}`;
+
+
+if(
+sekarang === jadwalGlobal.maghrib ||
+sekarang === jadwalGlobal.isya
+){
+
+duration = 480; // 8 menit
+
+}
+
+document.getElementById('overlayCount').innerHTML =
+`${String(Math.floor(duration/60)).padStart(2,'0')}:00`;
 
 const interval = setInterval(()=>{
+
 
 const menit =
 String(Math.floor(duration/60)).padStart(2,'0');
@@ -1016,11 +1362,14 @@ String(Math.floor(duration/60)).padStart(2,'0');
 const detik =
 String(duration%60).padStart(2,'0');
 
+
 document.getElementById('overlayCount')
 .innerHTML =
 `${menit}:${detik}`;
 
+
 duration--;
+
 
 if(duration < 0){
 
@@ -1030,10 +1379,12 @@ finishIqomah();
 
 }
 
+
 },1000);
 
-}
 
+}
+  
 /* ================= SELESAI ================= */
 
 function finishIqomah(){
@@ -1043,7 +1394,6 @@ modeIqomah = false;
 document.getElementById('overlay')
 .style.display = 'none';
 
-video.play();
 
 autoFullscreen();
 
@@ -1056,7 +1406,7 @@ modeAzan = false;
 document.getElementById('overlay')
 .style.display = 'none';
 
-video.play();
+
 
 autoFullscreen();
 
@@ -1131,7 +1481,6 @@ await loadPrayer();
 
 await autoFullscreen();
 
-video.play();
 
 }
 
@@ -1161,7 +1510,6 @@ await loadPrayer();
 
 await autoFullscreen();
 
-video.play();
 
 });
 
@@ -1187,6 +1535,384 @@ reconnectInternet();
 
 },15000);
 
+/* ================= SLIDESHOW ================= */
+
+let lastCommitSha = "";    
+
+function buildSlides(){
+
+    const v = Date.now();
+
+    return [
+        `slide1.jpg?v=${v}`,
+        `slide2.jpg?v=${v}`,
+        `slide3.jpg?v=${v}`,
+        `slide4.jpg?v=${v}`,
+        `slide5.jpg?v=${v}`
+    ];
+
+}
+
+let slides = buildSlides();
+    
+let slideIndex = 0;
+const slideShow = document.getElementById("slideShow");
+function refreshSlides(){
+
+    slides = buildSlides();
+
+    slideShow.src = slides[slideIndex];
+
+    console.log("Slide diperbarui dari GitHub");
+
+}
+
+function nextSlide(){
+
+let next=document.getElementById("nextSlide");
+
+
+slideIndex++;
+
+if(slideIndex >= slides.length){
+slideIndex=0;
+}
+
+
+next.src=buildSlides()[slideIndex];
+
+
+// reset animasi
+next.classList.remove("slide-transition");
+slideShow.classList.remove("slide-old");
+
+void next.offsetWidth;
+
+
+// mulai efek
+next.classList.add("slide-transition");
+slideShow.classList.add("slide-old");
+
+setTimeout(()=>{
+
+
+slideShow.src = next.src;
+
+
+next.classList.remove("slide-transition");
+slideShow.classList.remove("slide-old");
+
+
+},5000);
+  
+
+}
+    
+   
+// Interval harus lebih lama dari durasi transisi (misal: 10 detik)
+
+setInterval(nextSlide, 15000);
+checkGithubUpdate();
+
+setInterval(() => {
+
+    checkGithubUpdate();
+
+}, 30000);
+    
+setInterval(() => {
+
+    slides = getSlides();
+
+}, 30000);
+
+async function checkGithubUpdate(){
+
+    try{
+
+        const response = await fetch(
+            "https://api.github.com/repos/annurmmjkt-ship-it/jadwalshalat/commits/main"
+        );
+
+        const data = await response.json();
+
+        const latestSha = data.sha;
+
+        if(lastCommitSha === ""){
+
+            lastCommitSha = latestSha;
+            return;
+
+        }
+
+        if(latestSha !== lastCommitSha){
+
+            lastCommitSha = latestSha;
+
+            refreshSlides();
+
+        }
+
+    }catch(err){
+
+        console.log("Gagal cek GitHub",err);
+
+    }
+
+}    
+
+setInterval(() => {
+
+    slides = buildSlides();
+
+}, 30000);
+    
+/* ===== ADMIN ===== */
+
+const ADMIN_PASSWORD = "annur5455";
+
+document.getElementById("adminBtn").onclick = ()=>{
+
+document.getElementById("adminPanel").style.display="block";
+
+const savedToken =
+localStorage.getItem("github_token");
+
+if(savedToken){
+document.getElementById("githubToken").value =
+savedToken;
+}
+
+};
+
+function closeAdmin(){
+document.getElementById("adminPanel").style.display="none";
+}
+
+function saveToken(){
+
+const token =
+document.getElementById("githubToken").value;
+
+localStorage.setItem(
+"github_token",
+token
+);
+
+alert("Token tersimpan");
+}
+
+async function uploadSlides(){
+
+const pass =
+document.getElementById("adminPass").value;
+
+if(pass !== ADMIN_PASSWORD){
+
+alert("Password salah");
+
+return;
+
+}
+
+const token =
+localStorage.getItem("github_token");
+
+if(!token){
+
+alert("Token belum disimpan");
+
+return;
+
+}
+
+const files = [
+
+{
+id:"slide1Input",
+name:"slide1.jpg"
+},
+{
+id:"slide2Input",
+name:"slide2.jpg"
+},
+{
+id:"slide3Input",
+name:"slide3.jpg"
+},
+{
+id:"slide4Input",
+name:"slide4.jpg"
+},
+{
+id:"slide5Input",
+name:"slide5.jpg"
+}
+
+];
+    
+
+for(const item of files){
+
+const file =
+document.getElementById(item.id).files[0];
+
+if(!file) continue;
+
+document.getElementById("uploadStatus")
+.innerHTML =
+"Upload " + item.name + "...";
+
+const content =
+await fileToBase64(file);
+
+let sha = null;
+
+try{
+
+const oldFile =
+await fetch(
+`https://api.github.com/repos/annurmmjkt-ship-it/jadwalshalat/contents/${item.name}`,
+{
+headers:{
+Authorization:`Bearer ${token}`
+}
+}
+);
+
+if(oldFile.ok){
+
+const oldData =
+await oldFile.json();
+
+sha = oldData.sha;
+
+}
+
+}catch(e){}
+
+await fetch(
+`https://api.github.com/repos/annurmmjkt-ship-it/jadwalshalat/contents/${item.name}`,
+{
+method:"PUT",
+headers:{
+Authorization:`Bearer ${token}`,
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+
+message:`Update ${item.name}`,
+
+content:content,
+
+branch:"main",
+
+sha:sha
+
+})
+}
+);
+
+}
+
+document.getElementById("uploadStatus")
+.innerHTML =
+"✅ Upload selesai";
+
+localStorage.setItem(
+    "slide_last_update",
+    Date.now()
+);
+    
+setTimeout(()=>{
+
+location.reload();
+
+},2000);
+
+}
+
+
+function fileToBase64(file){
+
+return new Promise((resolve,reject)=>{
+
+const reader =
+new FileReader();
+
+reader.onload = ()=>{
+
+resolve(
+reader.result.split(",")[1]
+);
+
+};
+
+reader.onerror = reject;
+
+reader.readAsDataURL(file);
+
+});
+
+}
+
+setInterval(()=>{
+
+    location.reload();
+
+},300000);
+
+for(let i=1;i<=5;i++){
+
+document.getElementById("slide"+i+"Input")
+.addEventListener("change",function(){
+
+if(this.files.length){
+
+document.getElementById("name"+i)
+.innerHTML=this.files[0].name;
+
+}
+
+});
+
+}
+
+/* ================= SCREEN SAVER DIAGONAL ================= */
+let movePos = 0;
+
+function moveScreenSaver(){
+
+const page = document.body;
+
+
+const posisi = [
+
+"translate(0px,0px)",
+"translate(6px,4px)",
+"translate(-6px,6px)",
+"translate(6px,-4px)",
+"translate(-6px,-6px)"
+
+];
+
+
+movePos++;
+
+if(movePos >= posisi.length){
+movePos = 0;
+}
+
+
+page.style.transform = posisi[movePos];
+
+}
+
+
+// bergerak setiap 10 menit
+setInterval(moveScreenSaver,600000);
+    
+    
 /* ================= LOOP ================= */
 
 setInterval(checkPrayerTime,1000);
