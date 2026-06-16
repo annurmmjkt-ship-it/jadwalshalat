@@ -1149,6 +1149,7 @@ setInterval(updateNextPrayer,1000);
 
 let modeAzan = false;
 let modeIqomah = false;
+let currentPrayerName = "";    
 
 /* ================= CEK WAKTU ================= */
 
@@ -1186,7 +1187,8 @@ current === prayers[i].time
 && !modeAzan
 && !modeIqomah
 ){
-
+currentPrayerName = prayers[i].name;
+    
 if(
 hari === 5
 && prayers[i].name === 'DZUHUR'
@@ -1249,7 +1251,7 @@ if(duration < 0){
 
 clearInterval(interval);
 
-startIqomah();
+startIqomah(currentPrayerName);
 
 }
 
@@ -1309,7 +1311,7 @@ finishJumat();
 
 /* ================= IQOMAH ================= */
 
-function startIqomah(){
+function startIqomah(namaShalat){
 
 modeAzan = false;
 modeIqomah = true;
@@ -1326,26 +1328,12 @@ document.getElementById('overlaySub')
 
 let duration = 600; // default 10 menit
 
-
-// Magrib & Isya 8 menit
-const waktuSekarang = new Date();
-
-const jam =
-String(waktuSekarang.getHours()).padStart(2,'0');
-
-const menit =
-String(waktuSekarang.getMinutes()).padStart(2,'0');
-
-const sekarang =
-`${jam}:${menit}`;
-
-
 if(
-sekarang === jadwalGlobal.maghrib ||
-sekarang === jadwalGlobal.isya
+namaShalat === "MAGHRIB" ||
+namaShalat === "ISYA"
 ){
 
-duration = 480; // 8 menit
+duration = 480;
 
 }
 
