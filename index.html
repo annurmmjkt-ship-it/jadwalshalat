@@ -1188,6 +1188,7 @@ current === prayers[i].time
 && !modeIqomah
 ){
 currentPrayerName = prayers[i].name;
+console.log("Azan:", currentPrayerName);  
     
 if(
 hari === 5
@@ -1231,7 +1232,7 @@ document.getElementById('overlaySub')
 document.getElementById('overlayCount')
 .innerHTML = '05:00';
 
-let duration = 300;
+let duration = 299;
 
 const interval = setInterval(()=>{
 
@@ -1251,6 +1252,7 @@ if(duration < 0){
 
 clearInterval(interval);
 
+console.log("Azan selesai, masuk Iqomah");    
 startIqomah(currentPrayerName);
 
 }
@@ -1281,7 +1283,7 @@ document.getElementById('overlaySub')
 document.getElementById('overlayCount')
 .innerHTML = '05:00';
 
-let duration = 300;
+let duration = 299;
 
 const interval = setInterval(()=>{
 
@@ -1313,8 +1315,16 @@ finishJumat();
 
 function startIqomah(namaShalat){
 
+console.log("Mulai Iqomah:", namaShalat);
+
 modeAzan = false;
 modeIqomah = true;
+
+const overlay = document.getElementById('overlay');
+
+overlay.style.display = 'flex';    
+    
+
 
 document.getElementById('overlayTitle')
 .innerHTML = 'MENUJU IQOMAH';
