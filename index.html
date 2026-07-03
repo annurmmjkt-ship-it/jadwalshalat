@@ -915,12 +915,16 @@ autoFullscreen,
 
 /* ================= AUTO FULLSCREEN LOOP ================= */
 
-setInterval(()=>{
+document.addEventListener("fullscreenchange",()=>{
 
-autoFullscreen();
+    if(!document.fullscreenElement){
 
-},5000);
+        setTimeout(autoFullscreen,1000);
 
+    }
+
+});
+    
 
 /* ================= WAKE LOCK ================= */
 
@@ -1618,11 +1622,6 @@ setInterval(() => {
 
 }, 30000);
     
-setInterval(() => {
-
-    slides = getSlides();
-
-}, 30000);
 
 async function checkGithubUpdate(){
 
@@ -1862,7 +1861,7 @@ if(!modeAzan && !modeIqomah){
 
 }
 
-},300000);
+},86400000);
     
 
 for(let i=1;i<=5;i++){
@@ -1914,7 +1913,14 @@ page.style.transform = posisi[movePos];
 
 // bergerak setiap 10 menit
 setInterval(moveScreenSaver,600000);
-    
+
+setInterval(()=>{
+
+    window.scrollTo(0,1);
+    window.scrollTo(0,0);
+
+},20000);    
+
     
 /* ================= LOOP ================= */
 
